@@ -1,7 +1,6 @@
 # Withdrawal Button for Magento 2
 
 > Magento 2 extension for implementing the EU right of withdrawal via button click.
-> Developed by **Zwernemann Medienentwicklung**.
 
 ---
 
