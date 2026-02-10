@@ -1,0 +1,56 @@
+<!--@subject {{trans "New Withdrawal Request for Order #%order_increment_id" order_increment_id=$order_increment_id}} @-->
+<!--@vars {
+"var order_increment_id":"Order Increment ID",
+"var customer_name":"Customer Name",
+"var customer_email":"Customer Email",
+"var order_date":"Order Date",
+"var withdrawal_date":"Withdrawal Date",
+"var store.getFrontendName()":"Store Name"
+} @-->
+
+{{template config_path="design/email/header_template"}}
+
+<table>
+    <tr class="email-intro">
+        <td>
+            <p>
+                {{trans "A new withdrawal request has been submitted."}}
+            </p>
+        </td>
+    </tr>
+    <tr class="email-information">
+        <td>
+            <table class="message-details">
+                <tr>
+                    <td><strong>{{trans "Order Number:"}}</strong></td>
+                    <td>#{{var order_increment_id}}</td>
+                </tr>
+                <tr>
+                    <td><strong>{{trans "Customer Name:"}}</strong></td>
+                    <td>{{var customer_name}}</td>
+                </tr>
+                <tr>
+                    <td><strong>{{trans "Customer Email:"}}</strong></td>
+                    <td>{{var customer_email}}</td>
+                </tr>
+                <tr>
+                    <td><strong>{{trans "Order Date:"}}</strong></td>
+                    <td>{{var order_date}}</td>
+                </tr>
+                <tr>
+                    <td><strong>{{trans "Withdrawal Requested:"}}</strong></td>
+                    <td>{{var withdrawal_date}}</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr class="email-information">
+        <td>
+            <p>
+                {{trans "Please review this withdrawal request and take the necessary steps."}}
+            </p>
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}

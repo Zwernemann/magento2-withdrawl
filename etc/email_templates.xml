@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="zwernemann_withdrawal_email_customer_template"
+              label="Withdrawal Confirmation (Customer)"
+              file="withdrawal_customer.html"
+              type="html"
+              module="Zwernemann_Withdrawal"
+              area="frontend"/>
+    <template id="zwernemann_withdrawal_email_admin_template"
+              label="Withdrawal Notification (Admin)"
+              file="withdrawal_admin.html"
+              type="html"
+              module="Zwernemann_Withdrawal"
+              area="frontend"/>
+</config>

@@ -1,0 +1,101 @@
+/* Withdrawal Module Styles */
+
+/* Order History - Withdrawal Button */
+.col.withdrawal .action.withdrawal {
+    display: inline-block;
+    padding: 5px 12px;
+    background-color: #e74c3c;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 3px;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.col.withdrawal .action.withdrawal:hover {
+    background-color: #c0392b;
+    color: #fff;
+    text-decoration: none;
+}
+
+.col.withdrawal .withdrawal-status {
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.col.withdrawal .withdrawal-status.withdrawn {
+    color: #e67e22;
+    font-weight: 600;
+}
+
+.col.withdrawal .withdrawal-status.expired {
+    color: #95a5a6;
+}
+
+/* Withdrawal View Page */
+.withdrawal-view-container .table-order-details th {
+    text-align: left;
+    padding: 8px 15px 8px 0;
+    width: 200px;
+    color: #666;
+}
+
+.withdrawal-view-container .table-order-details td {
+    padding: 8px 0;
+}
+
+.withdrawal-view-container .table-order-items {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.withdrawal-view-container .table-order-items th,
+.withdrawal-view-container .table-order-items td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.withdrawal-view-container .table-order-items thead th {
+    background-color: #f9f9f9;
+    font-weight: 600;
+}
+
+.withdrawal-info-box {
+    border: 1px solid #e0e0e0;
+}
+
+.withdrawal-view-container .action.primary.withdraw {
+    background-color: #e74c3c;
+    border-color: #e74c3c;
+}
+
+.withdrawal-view-container .action.primary.withdraw:hover {
+    background-color: #c0392b;
+    border-color: #c0392b;
+}
+
+/* Success Page */
+.withdrawal-success-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.withdrawal-success-container .actions-toolbar {
+    display: flex;
+    justify-content: center;
+}
+
+/* Guest Search Form */
+.withdrawal-guest-search-container {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.withdrawal-guest-search-container .fieldset {
+    margin-bottom: 20px;
+}
+
+.withdrawal-guest-search-container .field {
+    margin-bottom: 15px;
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>Withdrawal Submitted</title>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Zwernemann\Withdrawal\Block\Withdrawal\Success"
+                   name="withdrawal.success"
+                   template="Zwernemann_Withdrawal::withdrawal/success.phtml"
+                   cacheable="false"/>
+        </referenceContainer>
+    </body>
+</page>

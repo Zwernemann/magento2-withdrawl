@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Zwernemann\Withdrawal\Api\WithdrawalRepositoryInterface"
+                type="Zwernemann\Withdrawal\Model\WithdrawalRepository"/>
+
+    <!-- Grid Collection (virtual type based on SearchResult) -->
+    <virtualType name="ZwernemannWithdrawalGridCollection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">zwernemann_withdrawal</argument>
+            <argument name="resourceModel" xsi:type="string">Zwernemann\Withdrawal\Model\ResourceModel\Withdrawal</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Register grid collection with the UI Component DataProvider -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="zwernemann_withdrawal_listing_data_source" xsi:type="string">ZwernemannWithdrawalGridCollection</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

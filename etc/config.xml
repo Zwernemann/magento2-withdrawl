@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <zwernemann_withdrawal>
+            <general>
+                <enabled>1</enabled>
+                <withdrawal_period>14</withdrawal_period>
+            </general>
+            <email>
+                <sender>general</sender>
+                <customer_template>zwernemann_withdrawal_email_customer_template</customer_template>
+                <admin_template>zwernemann_withdrawal_email_admin_template</admin_template>
+            </email>
+        </zwernemann_withdrawal>
+    </default>
+</config>

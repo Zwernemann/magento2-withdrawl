@@ -1,0 +1,60 @@
+<?php
+/** @var \Zwernemann\Withdrawal\Block\Guest\Search $block */
+?>
+<div class="withdrawal-guest-search-container">
+    <div class="block block-withdrawal-search">
+        <div class="block-title">
+            <strong><?= $block->escapeHtml(__('Search Order for Withdrawal')) ?></strong>
+        </div>
+        <div class="block-content">
+            <p class="note" style="margin-bottom: 20px;">
+                <?= $block->escapeHtml(__('Please enter your order number and the email address used for the order to find your order.')) ?>
+            </p>
+            <form method="post"
+                  action="<?= $block->escapeUrl($block->getFormAction()) ?>"
+                  id="withdrawal-guest-search-form"
+                  class="form form-withdrawal-search"
+                  data-mage-init='{"validation":{}}'>
+                <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
+                <fieldset class="fieldset">
+                    <div class="field order-number required">
+                        <label for="order_increment_id" class="label">
+                            <span><?= $block->escapeHtml(__('Order Number')) ?></span>
+                        </label>
+                        <div class="control">
+                            <input type="text"
+                                   name="order_increment_id"
+                                   id="order_increment_id"
+                                   class="input-text"
+                                   data-validate="{required:true}"
+                                   placeholder="<?= $block->escapeHtmlAttr(__('e.g. 000000001')) ?>"
+                                   autocomplete="off"/>
+                        </div>
+                    </div>
+                    <div class="field email required">
+                        <label for="email" class="label">
+                            <span><?= $block->escapeHtml(__('Email Address')) ?></span>
+                        </label>
+                        <div class="control">
+                            <input type="email"
+                                   name="email"
+                                   id="email"
+                                   class="input-text"
+                                   data-validate="{required:true, 'validate-email':true}"
+                                   placeholder="<?= $block->escapeHtmlAttr(__('your@email.com')) ?>"
+                                   autocomplete="email"/>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="actions-toolbar">
+                    <div class="primary">
+                        <button type="submit" class="action submit primary"
+                                title="<?= $block->escapeHtmlAttr(__('Search Order')) ?>">
+                            <span><?= $block->escapeHtml(__('Search Order')) ?></span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,42 @@
+<?php
+/** @var \Zwernemann\Withdrawal\Block\Withdrawal\Success $block */
+$order = $block->getOrder();
+?>
+<div class="withdrawal-success-container">
+    <div class="block block-withdrawal-success">
+        <div class="block-content" style="text-align: center; padding: 40px 20px;">
+            <div class="withdrawal-success-icon" style="font-size: 64px; color: #4caf50; margin-bottom: 20px;">
+                &#10003;
+            </div>
+            <h2><?= $block->escapeHtml(__('Withdrawal Successfully Submitted')) ?></h2>
+            <?php if ($order): ?>
+                <p style="font-size: 16px; margin-top: 15px;">
+                    <?= $block->escapeHtml(__(
+                        'Your withdrawal request for order #%1 has been received.',
+                        $order->getIncrementId()
+                    )) ?>
+                </p>
+            <?php endif; ?>
+            <p style="margin-top: 10px;">
+                <?= $block->escapeHtml(__('You will receive a confirmation email shortly.')) ?>
+            </p>
+            <p style="margin-top: 10px;">
+                <?= $block->escapeHtml(__('The shop will contact you regarding the next steps (e.g. return of goods, refund).')) ?>
+            </p>
+            <div class="actions-toolbar" style="margin-top: 30px; justify-content: center;">
+                <div class="primary">
+                    <a href="<?= $block->escapeUrl($block->getOrderHistoryUrl()) ?>"
+                       class="action primary">
+                        <span><?= $block->escapeHtml(__('Back to My Orders')) ?></span>
+                    </a>
+                </div>
+                <div class="secondary" style="margin-left: 15px;">
+                    <a href="<?= $block->escapeUrl($block->getHomeUrl()) ?>"
+                       class="action secondary">
+                        <span><?= $block->escapeHtml(__('Continue Shopping')) ?></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

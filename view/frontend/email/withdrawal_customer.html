@@ -1,0 +1,55 @@
+<!--@subject {{trans "Withdrawal Confirmation for Order #%order_increment_id" order_increment_id=$order_increment_id}} @-->
+<!--@vars {
+"var order_increment_id":"Order Increment ID",
+"var customer_name":"Customer Name",
+"var customer_email":"Customer Email",
+"var order_date":"Order Date",
+"var withdrawal_date":"Withdrawal Date",
+"var store.getFrontendName()":"Store Name"
+} @-->
+
+{{template config_path="design/email/header_template"}}
+
+<table>
+    <tr class="email-intro">
+        <td>
+            <p class="greeting">{{trans "Dear %customer_name," customer_name=$customer_name}}</p>
+            <p>
+                {{trans "We have received your withdrawal request for Order #%order_increment_id." order_increment_id=$order_increment_id}}
+            </p>
+            <p>
+                {{trans "Your withdrawal request has been registered successfully."}}
+            </p>
+        </td>
+    </tr>
+    <tr class="email-information">
+        <td>
+            <table class="message-details">
+                <tr>
+                    <td><strong>{{trans "Order Number:"}}</strong></td>
+                    <td>#{{var order_increment_id}}</td>
+                </tr>
+                <tr>
+                    <td><strong>{{trans "Order Date:"}}</strong></td>
+                    <td>{{var order_date}}</td>
+                </tr>
+                <tr>
+                    <td><strong>{{trans "Withdrawal Requested:"}}</strong></td>
+                    <td>{{var withdrawal_date}}</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr class="email-information">
+        <td>
+            <p>
+                {{trans "The shop will process your withdrawal request and contact you regarding the next steps (e.g. return of goods, refund)."}}
+            </p>
+            <p>
+                {{trans "If you have any questions, please contact us."}}
+            </p>
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}

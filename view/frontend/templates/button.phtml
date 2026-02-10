@@ -1,0 +1,11 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+$order = $block->getParentBlock() ? $block->getParentBlock()->getOrder() : null;
+?>
+<?php if ($order): ?>
+    <a href="<?= $block->escapeUrl($block->getUrl('withdrawal/index/view', ['order_id' => $order->getId()])) ?>"
+       class="action primary"
+       title="<?= $block->escapeHtmlAttr(__('Withdraw Order')) ?>">
+        <span><?= $block->escapeHtml(__('Withdraw Order')) ?></span>
+    </a>
+<?php endif; ?>

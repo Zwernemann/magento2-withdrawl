@@ -1,0 +1,129 @@
+<?php
+/** @var \Zwernemann\Withdrawal\Block\Withdrawal\View $block */
+$order = $block->getOrder();
+?>
+<?php if ($order): ?>
+<div class="withdrawal-view-container">
+    <div class="block block-order-details-view">
+        <div class="block-title">
+            <strong><?= $block->escapeHtml(__('Withdrawal for Order #%1', $order->getIncrementId())) ?></strong>
+        </div>
+        <div class="block-content">
+            <div class="box box-order-details">
+                <table class="table table-order-details" id="withdrawal-order-details">
+                    <tbody>
+                        <tr>
+                            <th scope="row"><?= $block->escapeHtml(__('Order Number')) ?></th>
+                            <td>#<?= $block->escapeHtml($order->getIncrementId()) ?></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><?= $block->escapeHtml(__('Order Date')) ?></th>
+                            <td><?= $block->escapeHtml($block->getFormattedDate($order->getCreatedAt())) ?></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><?= $block->escapeHtml(__('Order Status')) ?></th>
+                            <td><?= $block->escapeHtml($order->getStatusLabel()) ?></td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><?= $block->escapeHtml(__('Order Total')) ?></th>
+                            <td><?= /* @noEscape */ $order->formatPrice($order->getGrandTotal()) ?></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="box box-order-items" style="margin-top: 20px;">
+                <strong class="box-title">
+                    <span><?= $block->escapeHtml(__('Items Ordered')) ?></span>
+                </strong>
+                <table class="table table-order-items" id="withdrawal-order-items">
+                    <thead>
+                        <tr>
+                            <th class="col name"><?= $block->escapeHtml(__('Product Name')) ?></th>
+                            <th class="col sku"><?= $block->escapeHtml(__('SKU')) ?></th>
+                            <th class="col qty"><?= $block->escapeHtml(__('Qty')) ?></th>
+                            <th class="col price"><?= $block->escapeHtml(__('Price')) ?></th>
+                            <th class="col subtotal"><?= $block->escapeHtml(__('Subtotal')) ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($order->getAllVisibleItems() as $item): ?>
+                        <tr>
+                            <td class="col name" data-th="<?= $block->escapeHtmlAttr(__('Product Name')) ?>">
+                                <?= $block->escapeHtml($item->getName()) ?>
+                            </td>
+                            <td class="col sku" data-th="<?= $block->escapeHtmlAttr(__('SKU')) ?>">
+                                <?= $block->escapeHtml($item->getSku()) ?>
+                            </td>
+                            <td class="col qty" data-th="<?= $block->escapeHtmlAttr(__('Qty')) ?>">
+                                <?= (int) $item->getQtyOrdered() ?>
+                            </td>
+                            <td class="col price" data-th="<?= $block->escapeHtmlAttr(__('Price')) ?>">
+                                <?= /* @noEscape */ $order->formatPrice($item->getPrice()) ?>
+                            </td>
+                            <td class="col subtotal" data-th="<?= $block->escapeHtmlAttr(__('Subtotal')) ?>">
+                                <?= /* @noEscape */ $order->formatPrice($item->getRowTotal()) ?>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="withdrawal-info-box" style="margin-top: 30px; padding: 20px; background: #f5f5f5; border-radius: 4px;">
+                <?php if ($block->hasExistingWithdrawal()): ?>
+                    <div class="message info">
+                        <span><?= $block->escapeHtml(__('A withdrawal request has already been submitted for this order.')) ?></span>
+                    </div>
+                <?php elseif ($block->isWithdrawalAllowed()): ?>
+                    <div class="withdrawal-deadline" style="margin-bottom: 15px;">
+                        <p>
+                            <strong><?= $block->escapeHtml(__('Withdrawal deadline:')) ?></strong>
+                            <?= $block->escapeHtml($block->getWithdrawalDeadline()) ?>
+                        </p>
+                        <p><?= $block->escapeHtml(__('By submitting the withdrawal, you declare that you wish to revoke the purchase contract for this order.')) ?></p>
+                    </div>
+                    <form method="post" action="<?= $block->escapeUrl($block->getSubmitUrl()) ?>" id="withdrawal-form">
+                        <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
+                        <input type="hidden" name="order_id" value="<?= (int) $order->getEntityId() ?>"/>
+                        <?php if ($block->isGuest()): ?>
+                            <input type="hidden" name="guest" value="1"/>
+                            <input type="hidden" name="guest_email" value="<?= $block->escapeHtmlAttr($block->getGuestEmail()) ?>"/>
+                        <?php endif; ?>
+                        <div class="actions-toolbar">
+                            <div class="primary">
+                                <button type="submit" class="action primary withdraw"
+                                        title="<?= $block->escapeHtmlAttr(__('Submit Withdrawal')) ?>"
+                                        id="withdrawal-submit-btn">
+                                    <span><?= $block->escapeHtml(__('Submit Withdrawal')) ?></span>
+                                </button>
+                            </div>
+                            <div class="secondary">
+                                <a href="<?= $block->escapeUrl($block->getUrl('sales/order/history')) ?>"
+                                   class="action back">
+                                    <span><?= $block->escapeHtml(__('Back')) ?></span>
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                    <script type="text/x-magento-init">
+                        {
+                            "#withdrawal-form": {
+                                "Zwernemann_Withdrawal/js/withdrawal-confirm": {}
+                            }
+                        }
+                    </script>
+                <?php else: ?>
+                    <div class="message warning">
+                        <span><?= $block->escapeHtml(__('The withdrawal period for this order has expired. The deadline was: %1', $block->getWithdrawalDeadline())) ?></span>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+<?php else: ?>
+<div class="message info">
+    <span><?= $block->escapeHtml(__('The order could not be found.')) ?></span>
+</div>
+<?php endif; ?>

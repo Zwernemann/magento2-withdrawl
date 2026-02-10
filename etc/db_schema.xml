@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="zwernemann_withdrawal" resource="default" engine="innodb" comment="Withdrawal Requests">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true"
+                comment="Entity ID"/>
+        <column xsi:type="int" name="order_id" unsigned="true" nullable="false" comment="Order ID"/>
+        <column xsi:type="varchar" name="order_increment_id" length="32" nullable="false"
+                comment="Order Increment ID"/>
+        <column xsi:type="varchar" name="customer_email" length="255" nullable="false"
+                comment="Customer Email"/>
+        <column xsi:type="varchar" name="customer_name" length="255" nullable="true"
+                comment="Customer Name"/>
+        <column xsi:type="varchar" name="status" length="32" nullable="false" default="pending"
+                comment="Withdrawal Status"/>
+        <column xsi:type="text" name="comment" nullable="true" comment="Comment"/>
+        <column xsi:type="timestamp" name="order_created_at" nullable="true"
+                comment="Order Created At"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Created At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <index referenceId="ZWERNEMANN_WITHDRAWAL_ORDER_ID" indexType="btree">
+            <column name="order_id"/>
+        </index>
+        <index referenceId="ZWERNEMANN_WITHDRAWAL_ORDER_INCREMENT_ID" indexType="btree">
+            <column name="order_increment_id"/>
+        </index>
+    </table>
+</schema>

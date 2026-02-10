@@ -1,0 +1,25 @@
+<?php
+/** @var \Zwernemann\Withdrawal\Block\Order\WithdrawalButton $block */
+$order = $block->getOrder();
+?>
+<?php if ($order && $block->isEnabled()): ?>
+    <td class="col withdrawal" data-th="<?= $block->escapeHtmlAttr(__('Withdrawal')) ?>">
+        <?php if ($block->hasWithdrawal((int) $order->getEntityId())): ?>
+            <span class="withdrawal-status withdrawn">
+                <?= $block->escapeHtml(__('Withdrawal submitted')) ?>
+            </span>
+        <?php elseif ($block->isWithdrawalAllowed($order)): ?>
+            <a href="<?= $block->escapeUrl($block->getViewUrl((int) $order->getEntityId())) ?>"
+               class="action withdrawal"
+               title="<?= $block->escapeHtmlAttr(__('Withdraw Order')) ?>">
+                <span><?= $block->escapeHtml(__('Withdraw')) ?></span>
+            </a>
+        <?php else: ?>
+            <span class="withdrawal-status expired">
+                <?= $block->escapeHtml(__('Period expired')) ?>
+            </span>
+        <?php endif; ?>
+    </td>
+<?php elseif ($order): ?>
+    <td class="col withdrawal">&nbsp;</td>
+<?php endif; ?>
