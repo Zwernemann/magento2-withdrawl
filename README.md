@@ -256,7 +256,7 @@ Die Datenbanktabelle `zwernemann_withdrawal` bleibt erhalten und kann bei Bedarf
 **Zwernemann Medienentwicklung**
 79730 Murg
 
-Telefon: 07763 - 919773
+[Zur Website](https://www.zwernemann.de/widerrufsbutton-fuer-magento-2/)
 
 Bei Fragen, Problemen oder Ideen fuer neue Funktionen -- melden Sie sich gerne.
 
