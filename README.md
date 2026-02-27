@@ -113,13 +113,13 @@ Are you using a different Magento version? Let us know – we are happy to test 
 
 1. Extract the ZIP file and copy the entire contents to:
 
-   ```a
+   ```
    app/code/Zwernemann/Withdrawal/
    ```
 
-   Ensure the structure looks like this:
+ 2. Ensure the structure looks like this:
 
-   ```a
+   ```
    app/code/Zwernemann/Withdrawal/
        Api/
        Block/
@@ -134,29 +134,29 @@ Are you using a different Magento version? Let us know – we are happy to test 
        registration.php
    ```
 
-2. Run the following commands in the Magento root:
+3. Run the following commands in the Magento root:
 
-   ```bash
+   ```
    php bin/magento setup:upgrade
    php bin/magento setup:di:compile
    php bin/magento setup:static-content:deploy de_DE en_US
    php bin/magento cache:flush
-   ```a
+   ```
 
-3. Check if the module is active:
+4. Check if the module is active:
 
-   ``bash
+   ```
    php bin/magento module:status zwernemann_Withdrawal
    ```
-J### Via Composer
+### Via Composer
 
-```bash
+```
 composer requirezwernemann/module-withdrawal
 php bin/magento setup:upgrade
 php bin/magento setup:di:compile
 php bin/magento setup:static-content:deploy de_DE en_US
 php bin/magento cache:flush
-```a
+```
 
 ---
 
