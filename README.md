@@ -41,7 +41,7 @@ Customers who ordered without an account can access the withdrawal via a dedicat
 
 Accessible at: `/withdrawal/guest/search`
 
-**Confirmation page*(
+**Confirmation page**
 
 After submission, the customer is redirected to a success page. This confirms that the withdrawal has been received and that an email is on its way.
 
