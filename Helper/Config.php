@@ -55,16 +55,14 @@ class Config extends AbstractHelper
         return $value ? (int) $value : 14;
     }
 
-    public function getAllowedOrderStatuses(): array
+    public function getAllowedOrderStatuses($storeId = null): array
     {
         $value = $this->scopeConfig->getValue(
-            'zwernemann_withdrawal/general/allowed_order_statuses',
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            self::XML_PATH_ALLOWED_ORDER_STATUSES,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
         );
-        if (empty($value)) {
-            return ['pending', 'processing', 'complete'];
-        }
-        return explode(',', $value);
+        return $value ? explode(',', $value) : [];
     }
 
     public function getCustomerEmailTemplate($storeId = null): string
@@ -120,9 +118,10 @@ class Config extends AbstractHelper
         }
 
         $allowedStatuses = $this->getAllowedOrderStatuses();
-        if (!in_array($order->getStatus(), $allowedStatuses)) {
+        if (!empty($allowedStatuses) && !in_array($order->getStatus(), $allowedStatuses)) {
             return false;
         }
+
         
         $shipmentDate = $this->getLatestShipmentDate($order);
 
