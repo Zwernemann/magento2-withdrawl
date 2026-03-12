@@ -28,6 +28,12 @@
                     <validate>validate-digits</validate>
                     <comment>Number of days after order placement during which withdrawal is allowed. Default: 14 days.</comment>
                 </field>
+                <field id="allowed_order_statuses" translate="label comment" type="multiselect" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                            <label>Allowed Order Statuses</label>
+                            <comment>Withdrawal is only possible for orders with one of these statuses. Default: pending, processing, complete.</comment>
+                            <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                            <can_be_empty>0</can_be_empty>
+                </field>
             </group>
             <group id="email" translate="label" sortOrder="20"
                    showInDefault="1" showInWebsite="1" showInStore="1">
