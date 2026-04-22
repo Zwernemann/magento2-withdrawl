@@ -16,4 +16,19 @@ interface WithdrawalRepositoryInterface
      * @return array
      */
     public function getList();
+
+    /**
+     * @param int $entityId
+     * @return \Zwernemann\Withdrawal\Model\Withdrawal
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getById(int $entityId);
+
+    /**
+     * @param int $entityId
+     * @param string $status
+     * @return void
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function updateStatus(int $entityId, string $status): void;
 }

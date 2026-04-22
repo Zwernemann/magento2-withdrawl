@@ -29,6 +29,34 @@
         <bookmark name="bookmarks"/>
         <columnsControls name="columns_controls"/>
         <filters name="listing_filters"/>
+        <massaction name="listing_massaction">
+            <action name="confirm">
+                <settings>
+                    <url path="withdrawal/index/massupdatestatus">
+                        <param name="status">confirmed</param>
+                    </url>
+                    <type>confirm</type>
+                    <label translate="true">Confirm</label>
+                    <confirm>
+                        <title translate="true">Confirm Withdrawals</title>
+                        <message translate="true">Are you sure you want to confirm the selected withdrawal requests?</message>
+                    </confirm>
+                </settings>
+            </action>
+            <action name="reject">
+                <settings>
+                    <url path="withdrawal/index/massupdatestatus">
+                        <param name="status">rejected</param>
+                    </url>
+                    <type>reject</type>
+                    <label translate="true">Reject</label>
+                    <confirm>
+                        <title translate="true">Reject Withdrawals</title>
+                        <message translate="true">Are you sure you want to reject the selected withdrawal requests?</message>
+                    </confirm>
+                </settings>
+            </action>
+        </massaction>
         <paging name="listing_paging"/>
     </listingToolbar>
     <columns name="zwernemann_withdrawal_columns">

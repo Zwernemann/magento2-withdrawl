@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Zwernemann\Withdrawal\Model;
 
+use Magento\Framework\Exception\NoSuchEntityException;
 use Zwernemann\Withdrawal\Api\WithdrawalRepositoryInterface;
 use Zwernemann\Withdrawal\Model\ResourceModel\Withdrawal as WithdrawalResource;
 use Zwernemann\Withdrawal\Model\ResourceModel\Withdrawal\CollectionFactory;
@@ -56,5 +57,22 @@ class WithdrawalRepository implements WithdrawalRepositoryInterface
     public function hasWithdrawal(int $orderId): bool
     {
         return $this->getByOrderId($orderId) !== null;
+    }
+
+    public function getById(int $entityId): Withdrawal
+    {
+        $withdrawal = $this->withdrawalFactory->create();
+        $this->resource->load($withdrawal, $entityId);
+        if (!$withdrawal->getId()) {
+            throw new NoSuchEntityException(__('Withdrawal with ID "%1" does not exist.', $entityId));
+        }
+        return $withdrawal;
+    }
+
+    public function updateStatus(int $entityId, string $status): void
+    {
+        $withdrawal = $this->getById($entityId);
+        $withdrawal->setData('status', $status);
+        $this->resource->save($withdrawal);
     }
 }
