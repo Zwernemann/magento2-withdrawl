@@ -217,6 +217,9 @@ The database table `zwernemann_withdrawal` remains and can be removed manually i
 
 ## Version History
 
+### 1.5.0
+- Newly added languages: Bulgarian, Danish, Estonian, Finnish, French, Greek, Irish, Italian, Croatian, Latvian, Lithuanian, Maltese, Dutch, Polish, Portuguese, Romanian, Swedish, Slovak, Slovenian, Spanish, Czech, Hungarian. The module now supports all 24 official languages of the European Union. All translations use the legally correct term for the statutory right of withdrawal in accordance with the EU Consumer Rights Directive (2011/83/EU).
+
 ### 1.4.0
 - Deleted the version attribute from composer.json. Composer has great integration with version control systems like Git, Mercurial and Subversion and there is no need to manually track version numbers in a text file for Composer at all. The field only exists for special situations where a version control system is not in use.
 
