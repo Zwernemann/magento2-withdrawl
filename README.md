@@ -217,6 +217,9 @@ The database table `zwernemann_withdrawal` remains and can be removed manually i
 
 ## Version History
 
+### 1.4.0
+- Deleted the version attribute from composer.json. Composer has great integration with version control systems like Git, Mercurial and Subversion and there is no need to manually track version numbers in a text file for Composer at all. The field only exists for special situations where a version control system is not in use.
+
 ### 1.3.0 
 - Admin can now confirm or reject individual withdrawal requests directly from the grid
 - Context-sensitive action links per row (Confirm / Reject) — only shown when a status change makes sense
