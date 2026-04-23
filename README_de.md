@@ -104,7 +104,6 @@ Komplett uebersetzt in **Deutsch** und **Englisch** (97 Zeichenketten). Weitere 
 | Magento 2 Open Source | 2.4.6 bis 2.4.8-p4 |
 | PHP | 7.4 oder hoeher |
 
-Sie nutzen eine andere Magento-Version? Lassen Sie es uns wissen -- wir testen gerne.
 
 ---
 
