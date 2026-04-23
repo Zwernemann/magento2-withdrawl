@@ -79,7 +79,7 @@ class Find implements HttpPostActionInterface
         // Redirect to guest view page
         return $redirect->setPath('withdrawal/guest/view', [
             'order_id' => $order->getId(),
-            'email' => urlencode($email),
+            'email' => $email,
         ]);
     }
 }

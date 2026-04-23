@@ -28,7 +28,7 @@ class Actions extends Column
         if (isset($dataSource['data']['items'])) {
             foreach ($dataSource['data']['items'] as &$item) {
                 if (isset($item['entity_id'])) {
-                    $item[$this->getData('name')] = [
+                    $actions = [
                         'view_order' => [
                             'href' => $this->urlBuilder->getUrl(
                                 'sales/order/view',
@@ -37,6 +37,36 @@ class Actions extends Column
                             'label' => __('View Order'),
                         ],
                     ];
+
+                    if ($item['status'] !== 'confirmed') {
+                        $actions['confirm'] = [
+                            'href' => $this->urlBuilder->getUrl(
+                                'withdrawal/index/updatestatus',
+                                ['id' => $item['entity_id'], 'status' => 'confirmed']
+                            ),
+                            'label' => __('Confirm'),
+                            'confirm' => [
+                                'title' => __('Confirm Withdrawal'),
+                                'message' => __('Are you sure you want to confirm this withdrawal request?'),
+                            ],
+                        ];
+                    }
+
+                    if ($item['status'] !== 'rejected') {
+                        $actions['reject'] = [
+                            'href' => $this->urlBuilder->getUrl(
+                                'withdrawal/index/updatestatus',
+                                ['id' => $item['entity_id'], 'status' => 'rejected']
+                            ),
+                            'label' => __('Reject'),
+                            'confirm' => [
+                                'title' => __('Reject Withdrawal'),
+                                'message' => __('Are you sure you want to reject this withdrawal request?'),
+                            ],
+                        ];
+                    }
+
+                    $item[$this->getData('name')] = $actions;
                 }
             }
         }

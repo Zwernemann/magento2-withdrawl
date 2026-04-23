@@ -207,6 +207,13 @@ Die Datenbanktabelle `zwernemann_withdrawal` bleibt erhalten und kann bei Bedarf
 
 ## Versionshistorie
 
+### 1.3.0
+
+- Admin can now confirm or reject individual withdrawal requests directly from the grid
+- Context-sensitive action links per row (Confirm / Reject) — only shown when a status change makes sense
+- Bulk actions to confirm or reject multiple withdrawal requests at once
+- Added getById() and updateStatus() methods to WithdrawalRepositoryInterface and WithdrawalRepository
+
 ### 1.2.0
 
 - Widerrufsfrist beginnt nun ab dem Versanddatum der letzten Lieferung statt ab Bestelleingang (gesetzlich korrekt gemaess EU-Richtlinie 2011/83/EU)

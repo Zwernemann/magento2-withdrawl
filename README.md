@@ -217,6 +217,12 @@ The database table `zwernemann_withdrawal` remains and can be removed manually i
 
 ## Version History
 
+### 1.3.0 
+- Admin can now confirm or reject individual withdrawal requests directly from the grid
+- Context-sensitive action links per row (Confirm / Reject) — only shown when a status change makes sense
+- Bulk actions to confirm or reject multiple withdrawal requests at once
+- Added getById() and updateStatus() methods to WithdrawalRepositoryInterface and WithdrawalRepository
+
 ### 1.2.0
 
 - Withdrawal period now starts from the date of the last shipment instead of the order date (legally correct under EU Directive 2011/83/EU)

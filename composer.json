@@ -2,7 +2,7 @@
     "name": "zwernemann/module-withdrawal",
     "description": "Magento 2 EU Withdrawal Button Module - Adds a withdrawal/revocation button for orders in compliance with EU Directive (EU) 2023/2673",
     "type": "magento2-module",
-    "version": "1.1.0",
+    "version": "1.3.0",
     "license": ["OSL-3.0"],
     "require": {
         "php": ">=7.4",
