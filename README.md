@@ -104,7 +104,7 @@ Access is protected by ACL permission (`Zwernemann_Withdrawal::withdrawals`).
 
 ### Multilingualism
 
-Completely translated into **German** and **English** (97 strings). Further languages can be added via custom CSV files.
+Completely translated into all 24 languages of the EU (97 strings). Further languages can be added via custom CSV files.
 
 ---
 
