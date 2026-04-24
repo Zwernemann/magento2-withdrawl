@@ -105,7 +105,7 @@ Zugriff ist per ACL-Berechtigung geschuetzt (`Zwernemann_Withdrawal::withdrawals
 
 ### Mehrsprachigkeit
 
-Komplett uebersetzt in **Deutsch** und **Englisch** (97 Zeichenketten). Weitere Sprachen koennen ueber eigene CSV-Dateien ergaenzt werden.
+Komplett uebersetzt in alle offiziellen 24 Sprachen der EU (je 97 Zeichenketten). Weitere Sprachen koennen ueber eigene CSV-Dateien ergaenzt werden.
 
 ---
 
