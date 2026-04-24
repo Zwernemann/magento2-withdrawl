@@ -59,6 +59,7 @@ class View implements HttpGetActionInterface
             return $redirect->setPath('sales/order/history');
         }
 
+        // Only for logged in customers
         if (!$this->customerSession->isLoggedIn()) {
             $redirect = $this->redirectFactory->create();
             return $redirect->setPath('customer/account/login');

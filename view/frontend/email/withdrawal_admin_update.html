@@ -1,4 +1,4 @@
-<!--@subject {{trans "New Withdrawal Request for Order #%order_increment_id" order_increment_id=$order_increment_id}} @-->
+<!--@subject {{trans "Withdrawal Updated for Order #%order_increment_id" order_increment_id=$order_increment_id}} @-->
 <!--@vars {
 "var order_increment_id":"Order Increment ID",
 "var customer_name":"Customer Name",
@@ -7,8 +7,11 @@
 "var withdrawal_date":"Withdrawal Date",
 "var withdrawal_type_label":"Withdrawal Type Label",
 "var withdrawn_item_count":"Withdrawn Item Count",
+"var newly_withdrawn_item_count":"Newly Withdrawn Item Count",
+"var previous_item_count":"Previous Item Count",
 "var total_item_count":"Total Item Count",
-"var is_partial_withdrawal":"Is Partial Withdrawal",
+"var is_update":"Is Update",
+"var is_now_complete":"Is Now Complete",
 "var has_withdrawn_items":"Has Withdrawn Items",
 "var has_non_withdrawn_items":"Has Non-Withdrawn Items",
 "var withdrawn_items_html":"Withdrawn Items HTML",
@@ -21,9 +24,15 @@
 <table>
     <tr class="email-intro">
         <td>
-            <p>
-                {{trans "A new withdrawal request has been submitted."}}
-            </p>
+            <div style="margin: 15px 0; padding: 15px; background-color: #fff3cd; border-left: 4px solid #ffc107;">
+                <strong style="color: #856404; font-size: 16px;">{{trans "Withdrawal Updated"}}</strong>
+                <p style="margin-top: 5px; color: #856404;">
+                    {{trans "Customer has withdrawn additional items from an existing withdrawal request."}}
+                </p>
+                <p style="margin-top: 5px; color: #856404;">
+                    {{trans "Previous: %1 items | Now: %2 items (+%3 newly withdrawn)" previous_item_count=$previous_item_count withdrawn_item_count=$withdrawn_item_count newly_withdrawn_item_count=$newly_withdrawn_item_count}}
+                </p>
+            </div>
         </td>
     </tr>
     <tr class="email-information">
@@ -46,45 +55,46 @@
                     <td>{{var order_date}}</td>
                 </tr>
                 <tr>
-                    <td><strong>{{trans "Withdrawal Requested"}}</strong></td>
+                    <td><strong>{{trans "Latest Withdrawal Date"}}</strong></td>
                     <td>{{var withdrawal_date}}</td>
                 </tr>
                 <tr>
                     <td><strong>{{trans "Withdrawal Type"}}</strong></td>
                     <td>{{var withdrawal_type_label}}</td>
                 </tr>
-                {{depend withdrawn_item_count}}
-                <tr>
-                    <td><strong>{{trans "Items"}}</strong></td>
-                    <td>{{var withdrawn_item_count}} of {{var total_item_count}}</td>
+                <tr style="background-color: #fffacd;">
+                    <td><strong>{{trans "Total Withdrawn Items"}}</strong></td>
+                    <td><strong>{{var withdrawn_item_count}} {{trans "of"}} {{var total_item_count}}</strong></td>
                 </tr>
-                {{/depend}}
             </table>
         </td>
     </tr>
-    {{depend has_withdrawn_items}}
+    {{depend is_now_complete}}
     <tr class="email-information">
         <td>
-            <h3>{{trans "Withdrawn items"}}</h3>
-            {{var withdrawn_items_html|raw}}
+            <div style="margin: 20px 0; padding: 15px; background-color: #d4edda; border-left: 4px solid #28a745;">
+                <p><strong style="color: #155724; font-size: 16px;">{{trans "Complete Withdrawal"}}</strong></p>
+                <p style="color: #155724;">{{trans "All withdrawable items from this order have now been withdrawn."}}</p>
+            </div>
         </td>
     </tr>
     {{/depend}}
-    {{depend has_non_withdrawn_items}}
+    {{depend has_withdrawn_items}}
     <tr class="email-information">
         <td>
-            <h3>{{trans "Non-withdrawable items"}}</h3>
-            {{var non_withdrawn_items_html|raw}}
+            <h3>{{trans "Newly Withdrawn Items"}}</h3>
+            {{var withdrawn_items_html|raw}}
         </td>
     </tr>
     {{/depend}}
     <tr class="email-information">
         <td>
             <p>
-                {{trans "Please review this withdrawal request and take the necessary steps."}}
+                {{trans "Please review this updated withdrawal request and take the necessary steps."}}
             </p>
         </td>
     </tr>
 </table>
 
 {{template config_path="design/email/footer_template"}}
+

@@ -6,31 +6,41 @@ namespace Zwernemann\Withdrawal\Controller\Guest;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\RedirectFactory;
+use Magento\Framework\Data\Form\FormKey\Validator as FormKeyValidator;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\View\Result\PageFactory;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
-use Magento\Framework\Data\Form\FormKey\Validator as FormKeyValidator;
+use Psr\Log\LoggerInterface;
 use Zwernemann\Withdrawal\Helper\Config;
+use Zwernemann\Withdrawal\Service\EmailSender;
+use Zwernemann\Withdrawal\Service\GuestTokenManager;
 
 class Find implements HttpPostActionInterface
 {
-    private $request;
-    private $redirectFactory;
-    private $messageManager;
-    private $pageFactory;
-    private $orderCollectionFactory;
-    private $formKeyValidator;
-    private $config;
+    protected GuestTokenManager $tokenManager;
+    protected EmailSender $emailSender;
+    protected LoggerInterface $logger;
+    protected $request;
+    protected $redirectFactory;
+    protected $messageManager;
+    protected $pageFactory;
+    protected $orderCollectionFactory;
+    protected $formKeyValidator;
+    protected $config;
 
     public function __construct(
-        RequestInterface $request,
-        RedirectFactory $redirectFactory,
-        ManagerInterface $messageManager,
-        PageFactory $pageFactory,
+        RequestInterface       $request,
+        RedirectFactory        $redirectFactory,
+        ManagerInterface       $messageManager,
+        PageFactory            $pageFactory,
         OrderCollectionFactory $orderCollectionFactory,
-        FormKeyValidator $formKeyValidator,
-        Config $config
-    ) {
+        FormKeyValidator       $formKeyValidator,
+        Config                 $config,
+        GuestTokenManager      $tokenManager,
+        EmailSender            $emailSender,
+        LoggerInterface        $logger
+    )
+    {
         $this->request = $request;
         $this->redirectFactory = $redirectFactory;
         $this->messageManager = $messageManager;
@@ -38,6 +48,9 @@ class Find implements HttpPostActionInterface
         $this->orderCollectionFactory = $orderCollectionFactory;
         $this->formKeyValidator = $formKeyValidator;
         $this->config = $config;
+        $this->tokenManager = $tokenManager;
+        $this->emailSender = $emailSender;
+        $this->logger = $logger;
     }
 
     public function execute()
@@ -54,8 +67,8 @@ class Find implements HttpPostActionInterface
             return $redirect->setPath('/');
         }
 
-        $incrementId = trim((string) $this->request->getParam('order_increment_id'));
-        $email = trim((string) $this->request->getParam('email'));
+        $incrementId = trim((string)$this->request->getParam('order_increment_id'));
+        $email = trim((string)$this->request->getParam('email'));
 
         if (!$incrementId || !$email) {
             $this->messageManager->addErrorMessage(__('Please enter both order number and email address.'));
@@ -76,10 +89,25 @@ class Find implements HttpPostActionInterface
             return $redirect->setPath('withdrawal/guest/search');
         }
 
-        // Redirect to guest view page
-        return $redirect->setPath('withdrawal/guest/view', [
-            'order_id' => $order->getId(),
-            'email' => $email,
-        ]);
+        // Generate token and send email
+        try {
+            $token = $this->tokenManager->generateToken((int)$order->getId(), $email);
+            $this->emailSender->sendGuestAccessEmail($order, $email, $token);
+
+            $this->messageManager->addSuccessMessage(
+                __('An email with an access link has been sent to %1. Please check your inbox.', $email)
+            );
+        } catch (\Exception $e) {
+            $this->logger->error('Failed to send guest withdrawal access email', [
+                'order_id' => $order->getId(),
+                'email' => $email,
+                'error' => $e->getMessage()
+            ]);
+            $this->messageManager->addErrorMessage(
+                __('We could not send the access email. Please try again later.')
+            );
+        }
+
+        return $redirect->setPath('withdrawal/guest/search');
     }
 }

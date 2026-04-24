@@ -5,6 +5,12 @@
 "var customer_email":"Customer Email",
 "var order_date":"Order Date",
 "var withdrawal_date":"Withdrawal Date",
+"var withdrawal_type_label":"Withdrawal Type Label",
+"var is_partial_withdrawal":"Is Partial Withdrawal",
+"var has_withdrawn_items":"Has Withdrawn Items",
+"var has_non_withdrawn_items":"Has Non-Withdrawn Items",
+"var withdrawn_items_html":"Withdrawn Items HTML",
+"var non_withdrawn_items_html":"Non-Withdrawable Items HTML",
 "var store.getFrontendName()":"Store Name"
 } @-->
 
@@ -15,7 +21,8 @@
         <td>
             <p class="greeting">{{trans "Dear %customer_name," customer_name=$customer_name}}</p>
             <p>
-                {{trans "We have received your withdrawal request for Order #%order_increment_id." order_increment_id=$order_increment_id}}
+                {{trans "We have received your withdrawal request for Order #%order_increment_id."
+                order_increment_id=$order_increment_id}}
             </p>
             <p>
                 {{trans "Your withdrawal request has been registered successfully."}}
@@ -26,15 +33,15 @@
         <td>
             <table class="message-details">
                 <tr>
-                    <td><strong>{{trans "Order Number:"}}</strong></td>
+                    <td><strong>{{trans "Order ID"}}</strong></td>
                     <td>#{{var order_increment_id}}</td>
                 </tr>
                 <tr>
-                    <td><strong>{{trans "Order Date:"}}</strong></td>
+                    <td><strong>{{trans "Order Date"}}</strong></td>
                     <td>{{var order_date}}</td>
                 </tr>
                 <tr>
-                    <td><strong>{{trans "Withdrawal Requested:"}}</strong></td>
+                    <td><strong>{{trans "Withdrawal Requested"}}</strong></td>
                     <td>{{var withdrawal_date}}</td>
                 </tr>
             </table>
@@ -45,6 +52,20 @@
             <p>
                 {{trans "The shop will process your withdrawal request and contact you regarding the next steps (e.g. return of goods, refund)."}}
             </p>
+            {{depend is_partial_withdrawal}}
+            <div style="margin: 20px 0; padding: 15px; background-color: #f0f0f0; border-left: 4px solid #ffb700;">
+                <p><strong>{{trans "This is a partial withdrawal"}}</strong></p>
+                <p>{{trans "Some items cannot be withdrawn due to their properties"}}</p>
+            </div>
+            {{/depend}}
+            {{depend has_withdrawn_items}}
+            <h3 style="margin-top: 20px;">{{trans "Withdrawn items"}}</h3>
+            {{var withdrawn_items_html|raw}}
+            {{/depend}}
+            {{depend has_non_withdrawn_items}}
+            <h3 style="margin-top: 20px;">{{trans "Non-withdrawable items"}}</h3>
+            {{var non_withdrawn_items_html|raw}}
+            {{/depend}}
             <p>
                 {{trans "If you have any questions, please contact us."}}
             </p>

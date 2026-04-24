@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <!-- Triggered after credit memo is saved -->
+    <event name="sales_order_creditmemo_save_after">
+        <observer name="zwernemann_withdrawal_creditmemo_after" instance="Zwernemann\Withdrawal\Observer\CreditMemoSaveAfterObserver"/>
+    </event>
+</config>
+

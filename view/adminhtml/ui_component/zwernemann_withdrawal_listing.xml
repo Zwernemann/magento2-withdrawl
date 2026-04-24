@@ -111,6 +111,29 @@
                 </options>
             </settings>
         </column>
+        <column name="withdrawal_type" sortOrder="55" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <filter>select</filter>
+                <label translate="true">Withdrawal Type</label>
+                <dataType>select</dataType>
+                <options>
+                    <option name="full" xsi:type="array">
+                        <item name="value" xsi:type="string">full</item>
+                        <item name="label" xsi:type="string" translate="true">Full Withdrawal</item>
+                    </option>
+                    <option name="partial" xsi:type="array">
+                        <item name="value" xsi:type="string">partial</item>
+                        <item name="label" xsi:type="string" translate="true">Partial Withdrawal</item>
+                    </option>
+                </options>
+            </settings>
+        </column>
+        <column name="withdrawn_item_count" sortOrder="56">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">Withdrawn Items</label>
+            </settings>
+        </column>
         <column name="order_created_at" class="Magento\Ui\Component\Listing\Columns\Date"
                 component="Magento_Ui/js/grid/columns/date" sortOrder="60">
             <settings>

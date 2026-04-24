@@ -6,6 +6,7 @@
         <title>Search Order for Withdrawal</title>
     </head>
     <body>
+        <referenceBlock name="page.main.title" remove="true"/>
         <referenceContainer name="content">
             <block class="Zwernemann\Withdrawal\Block\Guest\Search"
                    name="withdrawal.guest.search"

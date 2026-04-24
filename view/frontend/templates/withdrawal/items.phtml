@@ -1,0 +1,55 @@
+<?php
+/**
+ * Withdrawal items table (Luma version)
+ * Displays order items in a table format
+ *
+ * @var \Zwernemann\Withdrawal\Block\Withdrawal\View $block
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Zwernemann\Withdrawal\Block\Withdrawal\View;
+
+/** @var View $block */
+/** @var Escaper $escaper */
+
+$order = $block->getOrder();
+$items = $block->getWithdrawnItems();
+if (!$order || !$items) {
+    return;
+}
+?>
+<table class="table table-order-items">
+    <thead>
+        <tr>
+            <th class="col name"><?= $escaper->escapeHtml(__('Product Name')) ?></th>
+            <th class="col sku"><?= $escaper->escapeHtml(__('SKU')) ?></th>
+            <th class="col qty"><?= $escaper->escapeHtml(__('Qty')) ?></th>
+            <th class="col price"><?= $escaper->escapeHtml(__('Price')) ?></th>
+            <th class="col subtotal"><?= $escaper->escapeHtml(__('Subtotal')) ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($items as $item): ?>
+            <tr>
+                <td class="col name" data-th="<?= $escaper->escapeHtmlAttr(__('Product Name')) ?>">
+                    <?= $escaper->escapeHtml($item->getName()) ?>
+                </td>
+                <td class="col sku" data-th="<?= $escaper->escapeHtmlAttr(__('SKU')) ?>">
+                    <?= $escaper->escapeHtml($item->getSku()) ?>
+                </td>
+                <td class="col qty" data-th="<?= $escaper->escapeHtmlAttr(__('Qty')) ?>">
+                    <?= (int)$item->getQtyOrdered() ?>
+                </td>
+                <td class="col price" data-th="<?= $escaper->escapeHtmlAttr(__('Price')) ?>">
+                    <?= /* @noEscape */ $order->formatPrice($item->getPrice()) ?>
+                </td>
+                <td class="col subtotal" data-th="<?= $escaper->escapeHtmlAttr(__('Subtotal')) ?>">
+                    <?= /* @noEscape */ $order->formatPrice($item->getRowTotal()) ?>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+

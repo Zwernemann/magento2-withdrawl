@@ -28,6 +28,11 @@
                     <validate>validate-digits</validate>
                     <comment>Number of days after order placement during which withdrawal is allowed. Default: 14 days.</comment>
                 </field>
+                <field id="excluded_product_attributes" translate="label comment" type="text" sortOrder="40"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Excluded Product Attributes</label>
+                    <comment>Comma-separated list of product attribute codes. Products with these attributes set to 'Yes' or '1' will be excluded from withdrawal (e.g., is_personalized,is_perishable,custom_made)</comment>
+                </field>
                 <field id="allowed_order_statuses" translate="label comment" type="multiselect"
                        sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Allowed Order Statuses</label>

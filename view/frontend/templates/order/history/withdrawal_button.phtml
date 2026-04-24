@@ -1,22 +1,65 @@
 <?php
-/** @var \Zwernemann\Withdrawal\Block\Order\WithdrawalButton $block */
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Zwernemann\Withdrawal\Block\Order\WithdrawalButton;
+
+/** @var WithdrawalButton $block */
+/** @var Escaper $escaper */
+
 $order = $block->getOrder();
+$withdrawal = null;
+if ($order && $block->hasWithdrawal((int)$order->getEntityId())) {
+    $withdrawal = $block->getWithdrawal((int)$order->getEntityId());
+}
 ?>
 <?php if ($order && $block->isEnabled()): ?>
-    <td class="col withdrawal" data-th="<?= $block->escapeHtmlAttr(__('Withdrawal')) ?>">
-        <?php if ($block->hasWithdrawal((int) $order->getEntityId())): ?>
-            <span class="withdrawal-status withdrawn">
-                <?= $block->escapeHtml(__('Withdrawal submitted')) ?>
-            </span>
+    <td class="col withdrawal" data-th="<?= $escaper->escapeHtmlAttr(__('Withdrawal')) ?>">
+        <?php if ($withdrawal && $withdrawal->getId()): ?>
+            <div class="withdrawal-status-container">
+                <?php
+                $status = $withdrawal->getData('status');
+                $statusLabel = $block->getStatusLabel($status);
+
+                // Status colors - inline styles for Luma theme
+                $statusStyles = [
+                    'pending' => ['bg' => '#fff3cd', 'color' => '#856404'],
+                    'confirmed' => ['bg' => '#d1ecf1', 'color' => '#0c5460'],
+                    'approved' => ['bg' => '#d4edda', 'color' => '#155724'],
+                    'rejected' => ['bg' => '#f8d7da', 'color' => '#721c24'],
+                    'completed' => ['bg' => '#d4edda', 'color' => '#155724']
+                ];
+                $style = $statusStyles[$status] ?? ['bg' => '#e2e8f0', 'color' => '#1a202c'];
+                ?>
+                <span class="withdrawal-status-badge"
+                      style="display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; background: <?= $escaper->escapeHtmlAttr($style['bg']) ?>; color: <?= $escaper->escapeHtmlAttr($style['color']) ?>;">
+                    <?= $escaper->escapeHtml($statusLabel) ?>
+                </span>
+                <br>
+                <span style="font-size: 11px; color: #666; margin-top: 4px; display: inline-block;">
+                    <?php if ($withdrawal->getData('withdrawal_type') === 'partial'): ?>
+                        <?= $escaper->escapeHtml(__('%1 of %2 items', $withdrawal->getData('withdrawn_item_count'), count($order->getAllVisibleItems()))) ?>
+                    <?php else: ?>
+                        <?= $escaper->escapeHtml(__('Full withdrawal')) ?>
+                    <?php endif; ?>
+                </span>
+                <br>
+                <a href="<?= $escaper->escapeUrl($block->getViewUrl((int)$order->getEntityId())) ?>"
+                   class="action view"
+                   style="font-size: 11px; margin-top: 4px; display: inline-block;"
+                   title="<?= $escaper->escapeHtmlAttr(__('View Withdrawal')) ?>">
+                    <?= $escaper->escapeHtml(__('View Details')) ?>
+                </a>
+            </div>
         <?php elseif ($block->isWithdrawalAllowed($order)): ?>
-            <a href="<?= $block->escapeUrl($block->getViewUrl((int) $order->getEntityId())) ?>"
+            <a href="<?= $escaper->escapeUrl($block->getViewUrl((int)$order->getEntityId())) ?>"
                class="action withdrawal"
-               title="<?= $block->escapeHtmlAttr(__('Withdraw Order')) ?>">
-                <span><?= $block->escapeHtml(__('Withdraw')) ?></span>
+               title="<?= $escaper->escapeHtmlAttr($block->getButtonText($order)) ?>">
+                <span><?= $escaper->escapeHtml($block->getButtonText($order)) ?></span>
             </a>
         <?php else: ?>
             <span class="withdrawal-status expired">
-                <?= $block->escapeHtml(__('Period expired')) ?>
+                <?= $escaper->escapeHtml(__('Period expired')) ?>
             </span>
         <?php endif; ?>
     </td>

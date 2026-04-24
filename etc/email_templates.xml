@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <!-- Original templates -->
     <template id="zwernemann_withdrawal_email_customer_template"
               label="Withdrawal Confirmation (Customer)"
               file="withdrawal_customer.html"
@@ -13,4 +14,25 @@
               type="html"
               module="Zwernemann_Withdrawal"
               area="frontend"/>
+
+    <!-- Update templates for Option B -->
+    <template id="zwernemann_withdrawal_email_customer_update_template"
+              label="Withdrawal Update (Customer)"
+              file="withdrawal_customer_update.html"
+              type="html"
+              module="Zwernemann_Withdrawal"
+              area="frontend"/>
+    <template id="zwernemann_withdrawal_email_admin_update_template"
+              label="Withdrawal Update (Admin)"
+              file="withdrawal_admin_update.html"
+              type="html"
+              module="Zwernemann_Withdrawal"
+              area="frontend"/>
+    <template id="zwernemann_withdrawal_guest_access_link"
+              label="Withdrawal Guest Access Link"
+              file="guest_access_link.html"
+              type="html"
+              module="Zwernemann_Withdrawal"
+              area="frontend"/>
 </config>
+

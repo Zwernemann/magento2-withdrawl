@@ -10,6 +10,7 @@ use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\View\Result\PageFactory;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Zwernemann\Withdrawal\Helper\Config;
+use Magento\Customer\Model\Session as CustomerSession;
 
 class View implements HttpGetActionInterface
 {
@@ -19,6 +20,7 @@ class View implements HttpGetActionInterface
     private $messageManager;
     private $orderRepository;
     private $config;
+    protected CustomerSession $customerSession;
 
     public function __construct(
         RequestInterface $request,
@@ -26,7 +28,8 @@ class View implements HttpGetActionInterface
         RedirectFactory $redirectFactory,
         ManagerInterface $messageManager,
         OrderRepositoryInterface $orderRepository,
-        Config $config
+        Config $config,
+        CustomerSession $customerSession
     ) {
         $this->request = $request;
         $this->pageFactory = $pageFactory;
@@ -34,6 +37,7 @@ class View implements HttpGetActionInterface
         $this->messageManager = $messageManager;
         $this->orderRepository = $orderRepository;
         $this->config = $config;
+        $this->customerSession = $customerSession;
     }
 
     public function execute()
@@ -46,21 +50,34 @@ class View implements HttpGetActionInterface
         }
 
         $orderId = (int) $this->request->getParam('order_id');
-        $email = urldecode((string) $this->request->getParam('email'));
 
-        if (!$orderId || !$email) {
+        if (!$orderId) {
             $this->messageManager->addErrorMessage(__('Invalid request.'));
             return $redirect->setPath('withdrawal/guest/search');
         }
 
+        // Validate guest token from session
+        $sessionToken = $this->customerSession->getGuestWithdrawalToken();
+        $sessionOrderId = $this->customerSession->getGuestWithdrawalOrderId();
+        $sessionEmail = $this->customerSession->getGuestWithdrawalEmail();
+
+        if (!$sessionToken || $sessionOrderId != $orderId) {
+            $this->messageManager->addErrorMessage(
+                __('Please use the access link from your email to view the withdrawal form.')
+            );
+            return $redirect->setPath('withdrawal/guest/search');
+        }
+
+        // Validate session data matches order
         try {
             $order = $this->orderRepository->get($orderId);
 
-            if (strtolower($order->getCustomerEmail()) !== strtolower($email)) {
-                $this->messageManager->addErrorMessage(__('The provided email does not match the order.'));
+            if (strtolower($order->getCustomerEmail()) !== strtolower($sessionEmail)) {
+                $this->messageManager->addErrorMessage(__('Invalid access.'));
                 return $redirect->setPath('withdrawal/guest/search');
             }
 
+            // Guest access validated, show page
             $page = $this->pageFactory->create();
             $page->getConfig()->getTitle()->set(
                 __('Withdrawal for Order #%1', $order->getIncrementId())

@@ -6,6 +6,7 @@
             <general>
                 <enabled>1</enabled>
                 <withdrawal_period>14</withdrawal_period>
+                <excluded_product_attributes></excluded_product_attributes>
             </general>
             <email>
                 <sender>general</sender>

@@ -4,6 +4,15 @@
     <preference for="Zwernemann\Withdrawal\Api\WithdrawalRepositoryInterface"
                 type="Zwernemann\Withdrawal\Model\WithdrawalRepository"/>
 
+    <!-- Circular dependency workaround: setter injection -->
+    <type name="Zwernemann\Withdrawal\Helper\Config">
+        <plugin name="withdrawal_config_set_repository" type="Zwernemann\Withdrawal\Plugin\ConfigPlugin" sortOrder="1"/>
+    </type>
+
+    <type name="Zwernemann\Withdrawal\Model\WithdrawalRepository">
+        <plugin name="withdrawal_repository_set_config" type="Zwernemann\Withdrawal\Plugin\RepositoryPlugin" sortOrder="1"/>
+    </type>
+
     <!-- Grid Collection (virtual type based on SearchResult) -->
     <virtualType name="ZwernemannWithdrawalGridCollection"
                  type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
@@ -18,6 +27,15 @@
         <arguments>
             <argument name="collections" xsi:type="array">
                 <item name="zwernemann_withdrawal_listing_data_source" xsi:type="string">ZwernemannWithdrawalGridCollection</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Register CLI Commands -->
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="withdrawal_status_update" xsi:type="object">Zwernemann\Withdrawal\Console\Command\UpdateWithdrawalStatus</item>
             </argument>
         </arguments>
     </type>

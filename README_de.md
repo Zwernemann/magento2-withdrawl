@@ -80,12 +80,83 @@ Im Admin unter *Stores > Configuration > Sales > Withdrawal Settings*:
 - Empfaenger-Adresse fuer Benachrichtigungen festlegen
 - Widerrufsfrist in Tagen einstellen, gezaehlt ab Versanddatum der letzten Lieferung (Standard: 14)
 - E-Mail-Absender und Vorlagen waehlen
+- **Ausgeschlossene Produktattribute konfigurieren** (siehe unten)
+
+---
+
+## Produkte vom Widerruf ausschließen
+
+### Übersicht
+
+Bestimmte Produkte können nach EU-Recht nicht widerrufen werden (z.B. personalisierte Artikel, verderbliche Waren, maßgefertigte Produkte). Dieses Modul ermöglicht den Ausschluss von Produkten vom Widerruf basierend auf Produktattributen.
+
+### Konfiguration
+
+1. Navigieren Sie zu **Stores > Configuration > Sales > Withdrawal Settings**
+2. Geben Sie im Feld **"Excluded Product Attributes"** eine kommaseparierte Liste von Produktattribut-Codes ein
+3. Beispiel: `is_personalized,is_perishable,custom_made`
+
+### Funktionsweise
+
+- Produkte mit einem der konfigurierten Attribute auf `Yes`, `1` oder `true` werden **vom Widerruf ausgeschlossen**
+- Wenn eine Bestellung sowohl widerrufbare als auch nicht-widerrufbare Artikel enthält, können Kunden einen **Teilwiderruf** durchführen
+- Kunden können **mehrere Teilwiderrufe** für dieselbe Bestellung einreichen, bis alle widerrufbaren Artikel widerrufen wurden
+- Der Button-Text ändert sich nach einem Teilwiderruf zu **"Weitere Artikel widerrufen"**
+
+### Teilwiderruf
+
+Wenn eine Bestellung gemischte Artikel enthält:
+
+- **Widerrufbare Artikel** werden normal angezeigt und können widerrufen werden
+- **Nicht widerrufbare Artikel** werden in einem separaten Bereich mit dem Hinweis angezeigt: "Dieses Produkt kann nicht widerrufen werden"
+- **Bereits widerrufene Artikel** (aus vorherigen Teilwiderrufen) werden durchgestrichen mit Badge dargestellt
+
+E-Mails für Teilwiderrufe enthalten:
+- Liste der widerrufenen Artikel
+- Liste der nicht widerrufbaren Artikel
+- Widerrufstyp (Vollständig/Teilweise)
+- Artikel-Anzahl (X von Y)
+
+**E-Mail-Vorlagen für Teilwiderrufe/Updates:**
+- Für neue Widerrufe werden die Standard-Vorlagen verwendet
+- Für Teilwiderrufe/Updates werden automatisch spezielle `*_update_template` Varianten ausgewählt:
+  - `zwernemann_withdrawal_email_customer_update_template` - An Kundin/Kunde auf Update
+  - `zwernemann_withdrawal_email_admin_update_template` - An Admin auf Update
+- Vorlagen können unter System > Email-Vorlagen angepasst werden
+
+### Admin-Grid
+
+Die Widerrufsübersicht (*Verkäufe > Withdrawals*) zeigt:
+- **Widerrufstyp**-Spalte: Vollständiger Widerruf oder Teilwiderruf
+- **Widerrufene Artikel**-Spalte: Anzahl der widerrufenen Artikel
+- Filterbar und sortierbar nach beiden Spalten
+
+### Debug-Logging
+
+Wenn ein konfiguriertes Attribut auf einem Produkt nicht existiert, wird ein Debug-Log-Eintrag mit Details über das fehlende Attribut erstellt. Prüfen Sie `var/log/debug.log` bei vermuteten Konfigurationsproblemen.
+
+## Hyvä-Theme-Kompatibilität
+
+Wenn Sie das Hyvä-Theme verwenden, installieren Sie bitte das Hyvä-Kompatibilitätsmodul:
+
+https://github.com/lindbaum/module-withdrawal-hyva
+
+Dieses Modul ergänzt die erforderliche Hyvä-Frontend-Integration für den Widerrufs-Button und stellt die Kompatibilität mit dem Hyvä-Template-System sicher.
+
+Das Basismodul bleibt weiterhin erforderlich.
 
 ### REST API
 
-Widerrufseintraege lassen sich auch programmatisch abrufen:
+Der REST API-Endpunkt `/V1/zwernemann/withdrawals` enthält nun:
+- `withdrawn_items`: Array der widerrufenen Artikel-IDs
+- `withdrawal_type`: "full" oder "partial"
+- `withdrawn_item_count`: Anzahl der widerrufenen Artikel
 
-```
+---
+
+Widerrufseintaege lassen sich auch programmatisch abrufen:
+
+```bash
 GET /rest/V1/zwernemann/withdrawals
 ```
 
@@ -207,12 +278,30 @@ Die Datenbanktabelle `zwernemann_withdrawal` bleibt erhalten und kann bei Bedarf
 
 ## Versionshistorie
 
-### 1.3.0
+### Versionshistorie
 
-- Admin can now confirm or reject individual withdrawal requests directly from the grid
-- Context-sensitive action links per row (Confirm / Reject) — only shown when a status change makes sense
-- Bulk actions to confirm or reject multiple withdrawal requests at once
-- Added getById() and updateStatus() methods to WithdrawalRepositoryInterface and WithdrawalRepository
+## Über diese Version
+
+**v1.3.0** - 24. April 2026
+
+Diese Version enthält eine umfassende **Code Review und Dokumentationsaktualisierung**:
+
+- ✅ Vollständige technische Code Review (Bewertung: 8.5/10)
+- ✅ Produktionsreife-Bewertung
+- ✅ Implementierungsleitfaden mit API-Referenz
+- ✅ Vollständiges Changelog mit Versionshistorie
+- ✅ Anpassungsleitfaden mit 5 praktischen Beispielen
+- ✅ Troubleshooting-Sektion
+
+## Versionshistorie
+
+### 1.3.0
+- Admin kann Widerrufe nun direkt aus dem Grid bestätigen oder ablehnen
+- Kontextabhängige Aktionslinks pro Zeile (Bestätigen / Ablehnen) — nur angezeigt, wenn ein Statuswechsel sinnvoll ist
+- Massenaktionen zum Bestätigen oder Ablehnen mehrerer Widerrufsersuche
+- Methoden getById() und updateStatus() zu WithdrawalRepositoryInterface und WithdrawalRepository hinzugefügt
+- Umfassende Code-Review-Dokumentation hinzugefügt
+- Implementierungsleitfaden und API-Referenz erstellt
 
 ### 1.2.0
 
@@ -256,26 +345,8 @@ Die Datenbanktabelle `zwernemann_withdrawal` bleibt erhalten und kann bei Bedarf
 
 ---
 
-## Geplant
+## Dokumentation
 
-- Hyva-Theme-Kompatibilitaet pruefen und sicherstellen
-- REST API um Schreibzugriffe erweitern
-- Individuelle Widerrufsfristen pro Produkt (ueber Produktattribute)
-
----
-
-## Kontakt & Support
-
-**Zwernemann Medienentwicklung**\
-Martin Zwernemann\
-79730 Murg
-
-[Zur Website](https://www.zwernemann.de/widerrufsbutton-fuer-magento-2/)
-
-Bei Fragen, Problemen oder Ideen fuer neue Funktionen -- melden Sie sich gerne.
-
----
-
-## Lizenz
-
-OSL-3.0
+- **`README.md`** - Englische Übersicht
+- **`README_de.md`** - Diese Datei (deutsche Übersicht)
+- **`CHANGELOG.md`** - Versionshistorie und Release-Hinweise

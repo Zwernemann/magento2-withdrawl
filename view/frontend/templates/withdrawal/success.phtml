@@ -24,12 +24,14 @@ $order = $block->getOrder();
                 <?= $block->escapeHtml(__('The shop will contact you regarding the next steps (e.g. return of goods, refund).')) ?>
             </p>
             <div class="actions-toolbar" style="margin-top: 30px; justify-content: center;">
-                <div class="primary">
-                    <a href="<?= $block->escapeUrl($block->getOrderHistoryUrl()) ?>"
-                       class="action primary">
-                        <span><?= $block->escapeHtml(__('Back to My Orders')) ?></span>
-                    </a>
-                </div>
+                <?php if ($block->customerLoggedIn()): ?>
+                    <div class="primary">
+                        <a href="<?= $block->escapeUrl($block->getOrderHistoryUrl()) ?>"
+                           class="action primary">
+                            <span><?= $block->escapeHtml(__('Back to My Orders')) ?></span>
+                        </a>
+                    </div>
+                <?php endif; ?>
                 <div class="secondary" style="margin-left: 15px;">
                     <a href="<?= $block->escapeUrl($block->getHomeUrl()) ?>"
                        class="action secondary">
