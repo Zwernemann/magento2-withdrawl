@@ -16,17 +16,26 @@ $items      = $block->getWithdrawalItems();
     </a>
 </div>
 
-<div class="admin__data-grid-wrap" style="margin-top: 20px;">
+<style>
+    .withdrawal-detail-table th {
+        background-color: #f0f0f0 !important;
+        color: #333 !important;
+        font-weight: 600;
+        text-align: left;
+        padding: 8px 12px;
+    }
+</style>
+
+<h2 style="margin: 20px 0 16px;"><?= $block->escapeHtml(__('Withdrawal Request #%1', $withdrawal->getId())) ?></h2>
+
+<div class="admin__data-grid-wrap">
 
     <!-- Header row: meta + status actions -->
     <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:24px;">
 
         <!-- Withdrawal details -->
         <div class="admin__field" style="flex:1; min-width:280px;">
-            <div class="admin__field-label" style="font-weight:bold; margin-bottom:8px;">
-                <?= $block->escapeHtml(__('Withdrawal Request #%1', $withdrawal->getId())) ?>
-            </div>
-            <table class="data-grid" style="width:100%;">
+            <table class="data-grid withdrawal-detail-table" style="width:100%;">
                 <tbody>
                     <tr>
                         <th><?= $block->escapeHtml(__('Order #')) ?></th>
