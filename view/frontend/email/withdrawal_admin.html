@@ -5,6 +5,8 @@
 "var customer_email":"Customer Email",
 "var order_date":"Order Date",
 "var withdrawal_date":"Withdrawal Date",
+"var is_partial":"Is Partial Withdrawal",
+"var withdrawn_items":"Withdrawn Items (line-separated)",
 "var store.getFrontendName()":"Store Name"
 } @-->
 
@@ -14,7 +16,13 @@
     <tr class="email-intro">
         <td>
             <p>
-                {{trans "A new withdrawal request has been submitted."}}
+                {{depend is_partial}}
+                    {{trans "A new partial withdrawal request has been submitted."}}
+                {{/depend}}
+                {{depend is_partial}}
+                {{else}}
+                    {{trans "A new withdrawal request has been submitted."}}
+                {{/depend}}
             </p>
         </td>
     </tr>
@@ -41,6 +49,12 @@
                     <td><strong>{{trans "Withdrawal Requested:"}}</strong></td>
                     <td>{{var withdrawal_date}}</td>
                 </tr>
+                {{depend withdrawn_items}}
+                <tr>
+                    <td><strong>{{trans "Withdrawn Items:"}}</strong></td>
+                    <td style="white-space: pre-line;">{{var withdrawn_items}}</td>
+                </tr>
+                {{/depend}}
             </table>
         </td>
     </tr>

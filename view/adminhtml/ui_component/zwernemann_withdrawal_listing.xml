@@ -127,6 +127,23 @@
                 <label translate="true">Withdrawal Requested At</label>
             </settings>
         </column>
+        <column name="is_partial" sortOrder="75" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <filter>select</filter>
+                <label translate="true">Type</label>
+                <dataType>select</dataType>
+                <options>
+                    <option name="full" xsi:type="array">
+                        <item name="value" xsi:type="string">0</item>
+                        <item name="label" xsi:type="string" translate="true">Full</item>
+                    </option>
+                    <option name="partial" xsi:type="array">
+                        <item name="value" xsi:type="string">1</item>
+                        <item name="label" xsi:type="string" translate="true">Partial</item>
+                    </option>
+                </options>
+            </settings>
+        </column>
         <column name="comment" sortOrder="80">
             <settings>
                 <filter>text</filter>
