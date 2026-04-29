@@ -5,39 +5,24 @@ namespace Zwernemann\Withdrawal\Block\Withdrawal;
 
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
-use Magento\Framework\App\RequestInterface;
-use Magento\Sales\Api\OrderRepositoryInterface;
+use Zwernemann\Withdrawal\Model\Session as WithdrawalSession;
 
 class Success extends Template
 {
-    private $request;
-    private $orderRepository;
-    private $order;
+    private $withdrawalSession;
 
     public function __construct(
         Context $context,
-        RequestInterface $request,
-        OrderRepositoryInterface $orderRepository,
+        WithdrawalSession $withdrawalSession,
         array $data = []
     ) {
         parent::__construct($context, $data);
-        $this->request = $request;
-        $this->orderRepository = $orderRepository;
+        $this->withdrawalSession = $withdrawalSession;
     }
 
     public function getOrder()
     {
-        if ($this->order === null) {
-            $orderId = (int) $this->request->getParam('order_id');
-            if ($orderId) {
-                try {
-                    $this->order = $this->orderRepository->get($orderId);
-                } catch (\Exception $e) {
-                    $this->order = false;
-                }
-            }
-        }
-        return $this->order ?: null;
+        return $this->withdrawalSession->getLastWithdrawnOrder();
     }
 
     public function getOrderHistoryUrl(): string

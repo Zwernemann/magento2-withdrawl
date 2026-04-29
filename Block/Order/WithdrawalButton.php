@@ -26,7 +26,7 @@ class WithdrawalButton extends Template
 
     public function getViewUrl(int $orderId): string
     {
-        return $this->getUrl('withdrawal/index/view', ['order_id' => $orderId]);
+        return $this->getUrl('withdrawal/index/find', ['order_id' => $orderId]);
     }
 
     public function isEnabled(): bool

@@ -6,46 +6,35 @@ namespace Zwernemann\Withdrawal\Block\Withdrawal;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Framework\App\RequestInterface;
-use Magento\Sales\Api\OrderRepositoryInterface;
 use Zwernemann\Withdrawal\Helper\Config;
+use Zwernemann\Withdrawal\Model\Session as WithdrawalSession;
 use Zwernemann\Withdrawal\Model\WithdrawalRepository;
 
 class View extends Template
 {
     private $request;
-    private $orderRepository;
     private $config;
     private $withdrawalRepository;
-    private $order;
+    private $withdrawalSession;
 
     public function __construct(
         Context $context,
         RequestInterface $request,
-        OrderRepositoryInterface $orderRepository,
         Config $config,
         WithdrawalRepository $withdrawalRepository,
+        WithdrawalSession $withdrawalSession,
         array $data = []
     ) {
         parent::__construct($context, $data);
         $this->request = $request;
-        $this->orderRepository = $orderRepository;
         $this->config = $config;
         $this->withdrawalRepository = $withdrawalRepository;
+        $this->withdrawalSession = $withdrawalSession;
     }
 
     public function getOrder()
     {
-        if ($this->order === null) {
-            $orderId = (int) $this->request->getParam('order_id');
-            if ($orderId) {
-                try {
-                    $this->order = $this->orderRepository->get($orderId);
-                } catch (\Exception $e) {
-                    $this->order = false;
-                }
-            }
-        }
-        return $this->order ?: null;
+        return $this->withdrawalSession->getWithdrawalOrder();
     }
 
     public function getSubmitUrl(): string

@@ -21,4 +21,16 @@
             </argument>
         </arguments>
     </type>
+
+    <!-- Register withdrawal session -->
+    <virtualType name="Zwernemann\Withdrawal\Model\Session\Storage" type="Magento\Framework\Session\Storage">
+        <arguments>
+            <argument name="namespace" xsi:type="string">withdrawal</argument>
+        </arguments>
+    </virtualType>
+    <type name="Zwernemann\Withdrawal\Model\Session">
+        <arguments>
+            <argument name="storage" xsi:type="object">Zwernemann\Withdrawal\Model\Session\Storage</argument>
+        </arguments>
+    </type>
 </config>
