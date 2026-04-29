@@ -63,6 +63,16 @@ Under *Sales > Withdrawals*, you will find a tabular overview of all received wi
 
 All columns can be filtered and sorted.
 
+**Withdrawal detail page**
+
+Each row in the grid has a *View Details* action that opens a dedicated detail page. It shows:
+
+- All metadata: customer name and email, order number, withdrawal type, status, order date and withdrawal date
+- Quick action buttons to confirm or reject the request directly on the page
+- A complete table of the withdrawn items including product name, SKU and quantity – clearly labelled as full or partial withdrawal
+
+This makes it possible to review exactly which items a customer has withdrawn without leaving the admin area.
+
 **Automatic email notification**
 
 Soon as a withdrawal is received, two emails are sent:
@@ -230,6 +240,7 @@ The database tables `zwernemann_withdrawal` and `zwernemann_withdrawal_items` re
 - Already withdrawn items are shown greyed out; further partial requests can be submitted for the remaining items
 - New database table `zwernemann_withdrawal_items` stores the item-level withdrawal data
 - Admin grid shows a *Type* column (Full / Partial) for each withdrawal entry
+- New admin detail page (*View Details*) shows all withdrawal metadata, quick confirm/reject actions, and a full table of withdrawn items with name, SKU, and quantity
 - Email notifications now include the list of withdrawn items
 
 ### 1.5.0

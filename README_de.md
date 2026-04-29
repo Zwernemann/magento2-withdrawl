@@ -64,6 +64,16 @@ Unter *Verkäufe > Withdrawals* finden Sie eine tabellarische Uebersicht saemtli
 
 Alle Spalten sind filterbar und sortierbar.
 
+**Widerrufs-Detailseite**
+
+Jede Zeile im Grid hat eine *Details anzeigen*-Aktion, die eine dedizierte Detailseite öffnet. Dort werden angezeigt:
+
+- Alle Metadaten: Kundenname und E-Mail, Bestellnummer, Widerrufstyp, Status, Bestelldatum und Widerrufsdatum
+- Schnellaktions-Buttons zum direkten Bestätigen oder Ablehnen des Antrags auf der Seite
+- Eine vollständige Tabelle der widerrufenen Positionen mit Produktname, Artikelnummer und Menge – eindeutig als Voll- oder Teilwiderruf gekennzeichnet
+
+Damit lässt sich genau nachvollziehen, welche Artikel ein Kunde widerrufen hat – ohne den Adminbereich verlassen zu müssen.
+
 **Automatische Benachrichtigung per E-Mail**
 
 Sobald ein Widerruf eingeht, werden zwei E-Mails verschickt:
@@ -232,6 +242,7 @@ Die Datenbanktabellen `zwernemann_withdrawal` und `zwernemann_withdrawal_items` 
 - Bereits widerrufene Positionen werden ausgegraut; weitere Teilwiderrufe fuer verbliebene Positionen sind moeglich
 - Neue Datenbanktabelle `zwernemann_withdrawal_items` speichert die positionsgenauen Widerrufsdaten
 - Admin-Grid zeigt neue Spalte *Typ* (Vollwiderruf / Teilwiderruf)
+- Neue Admin-Detailseite (*Details anzeigen*) zeigt alle Widerrufsmetadaten, Schnellaktionen zum Bestätigen/Ablehnen sowie eine vollständige Tabelle der widerrufenen Positionen mit Name, Artikelnummer und Menge
 - E-Mail-Benachrichtigungen enthalten jetzt die Liste der widerrufenen Positionen
 
 ### 1.5.0
