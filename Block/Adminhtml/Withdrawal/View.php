@@ -76,7 +76,7 @@ class View extends Template
         return $this->getUrl('withdrawal/index/index');
     }
 
-    public function formatDate(string $date): string
+    public function formatWithdrawalDate(string $date): string
     {
         try {
             return (new \DateTime($date))->format('d.m.Y H:i');

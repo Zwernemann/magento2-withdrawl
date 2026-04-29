@@ -66,11 +66,11 @@ $items      = $block->getWithdrawalItems();
                     </tr>
                     <tr>
                         <th><?= $block->escapeHtml(__('Order Placed At')) ?></th>
-                        <td><?= $block->escapeHtml($block->formatDate((string) $withdrawal->getData('order_created_at'))) ?></td>
+                        <td><?= $block->escapeHtml($block->formatWithdrawalDate((string) $withdrawal->getData('order_created_at'))) ?></td>
                     </tr>
                     <tr>
                         <th><?= $block->escapeHtml(__('Withdrawal Requested At')) ?></th>
-                        <td><?= $block->escapeHtml($block->formatDate((string) $withdrawal->getData('created_at'))) ?></td>
+                        <td><?= $block->escapeHtml($block->formatWithdrawalDate((string) $withdrawal->getData('created_at'))) ?></td>
                     </tr>
                     <?php if ($withdrawal->getData('comment')): ?>
                     <tr>
