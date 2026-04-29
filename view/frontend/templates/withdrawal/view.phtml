@@ -2,6 +2,7 @@
 /** @var \Zwernemann\Withdrawal\Block\Withdrawal\View $block */
 $order = $block->getOrder();
 $withdrawnItemIds = $block->getWithdrawnOrderItemIds();
+$partialAllowed = $block->isPartialWithdrawalAllowed();
 ?>
 <?php if ($order): ?>
 <div class="withdrawal-view-container">
@@ -55,7 +56,11 @@ $withdrawnItemIds = $block->getWithdrawnOrderItemIds();
                         <?php else: ?>
                         <p><?= $block->escapeHtml(__('This order has not been shipped yet. You may withdraw at any time until you receive the goods.')) ?></p>
                         <?php endif; ?>
+                        <?php if ($partialAllowed): ?>
                         <p><?= $block->escapeHtml(__('Select the items you wish to withdraw. You may withdraw individual items (partial withdrawal) or all items at once.')) ?></p>
+                        <?php else: ?>
+                        <p><?= $block->escapeHtml(__('By submitting the withdrawal, you declare that you wish to revoke the purchase contract for this order.')) ?></p>
+                        <?php endif; ?>
                     </div>
 
                     <form method="post" action="<?= $block->escapeUrl($block->getSubmitUrl()) ?>" id="withdrawal-form">
@@ -73,13 +78,17 @@ $withdrawnItemIds = $block->getWithdrawnOrderItemIds();
                             <table class="table table-order-items" id="withdrawal-order-items">
                                 <thead>
                                     <tr>
+                                        <?php if ($partialAllowed): ?>
                                         <th class="col select" style="width: 40px;">
                                             <input type="checkbox" id="withdrawal-select-all" title="<?= $block->escapeHtmlAttr(__('Select All')) ?>" checked/>
                                         </th>
+                                        <?php endif; ?>
                                         <th class="col name"><?= $block->escapeHtml(__('Product Name')) ?></th>
                                         <th class="col sku"><?= $block->escapeHtml(__('SKU')) ?></th>
                                         <th class="col qty"><?= $block->escapeHtml(__('Qty Ordered')) ?></th>
+                                        <?php if ($partialAllowed): ?>
                                         <th class="col qty-withdraw"><?= $block->escapeHtml(__('Qty to Withdraw')) ?></th>
+                                        <?php endif; ?>
                                         <th class="col price"><?= $block->escapeHtml(__('Price')) ?></th>
                                         <th class="col subtotal"><?= $block->escapeHtml(__('Subtotal')) ?></th>
                                     </tr>
@@ -93,6 +102,7 @@ $withdrawnItemIds = $block->getWithdrawnOrderItemIds();
                                     ?>
                                     <tr class="<?= $isWithdrawn ? 'withdrawal-item-disabled' : 'withdrawal-item-selectable' ?>"
                                         style="<?= $isWithdrawn ? 'opacity:0.5;' : '' ?>">
+                                        <?php if ($partialAllowed): ?>
                                         <td class="col select">
                                             <?php if ($isWithdrawn): ?>
                                                 <span class="withdrawal-status-badge"
@@ -107,6 +117,9 @@ $withdrawnItemIds = $block->getWithdrawnOrderItemIds();
                                                        checked/>
                                             <?php endif; ?>
                                         </td>
+                                        <?php elseif (!$isWithdrawn): ?>
+                                            <input type="hidden" name="selected_items[]" value="<?= $itemId ?>"/>
+                                        <?php endif; ?>
                                         <td class="col name" data-th="<?= $block->escapeHtmlAttr(__('Product Name')) ?>">
                                             <?= $block->escapeHtml($item->getName()) ?>
                                         </td>
@@ -116,6 +129,7 @@ $withdrawnItemIds = $block->getWithdrawnOrderItemIds();
                                         <td class="col qty" data-th="<?= $block->escapeHtmlAttr(__('Qty Ordered')) ?>">
                                             <?= $qtyOrdered ?>
                                         </td>
+                                        <?php if ($partialAllowed): ?>
                                         <td class="col qty-withdraw" data-th="<?= $block->escapeHtmlAttr(__('Qty to Withdraw')) ?>">
                                             <?php if (!$isWithdrawn): ?>
                                                 <input type="number"
@@ -130,6 +144,7 @@ $withdrawnItemIds = $block->getWithdrawnOrderItemIds();
                                                 &mdash;
                                             <?php endif; ?>
                                         </td>
+                                        <?php endif; ?>
                                         <td class="col price" data-th="<?= $block->escapeHtmlAttr(__('Price')) ?>">
                                             <?= /* @noEscape */ $order->formatPrice($item->getPrice()) ?>
                                         </td>

@@ -28,6 +28,12 @@
                     <validate>validate-digits</validate>
                     <comment>Number of days after order placement during which withdrawal is allowed. Default: 14 days.</comment>
                 </field>
+                <field id="allow_partial_withdrawal" translate="label comment" type="select" sortOrder="40"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Allow Partial Withdrawal</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Allow customers to withdraw individual items instead of the entire order. Default: No.</comment>
+                </field>
                 <field id="allowed_order_statuses" translate="label comment" type="multiselect"
                        sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Allowed Order Statuses</label>

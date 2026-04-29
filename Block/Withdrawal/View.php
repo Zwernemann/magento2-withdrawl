@@ -56,6 +56,11 @@ class View extends Template
         return $this->getUrl('withdrawal/index/submit');
     }
 
+    public function isPartialWithdrawalAllowed(): bool
+    {
+        return $this->config->isPartialWithdrawalAllowed();
+    }
+
     public function isWithdrawalAllowed(): bool
     {
         $order = $this->getOrder();

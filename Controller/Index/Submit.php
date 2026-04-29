@@ -111,6 +111,14 @@ class Submit implements HttpPostActionInterface
                 return $redirect->setPath('sales/order/history');
             }
 
+            // Build a map of visible order items keyed by item_id
+            $orderItemsById = [];
+            foreach ($order->getAllVisibleItems() as $item) {
+                $orderItemsById[(int) $item->getItemId()] = $item;
+            }
+
+            $partialAllowed = $this->config->isPartialWithdrawalAllowed();
+
             // Resolve selected items from POST
             // selected_items[] contains order_item_ids; item_qty[<id>] contains the qty to withdraw
             $selectedItemIds = array_map('intval', (array) $this->request->getParam('selected_items', []));
@@ -123,10 +131,10 @@ class Submit implements HttpPostActionInterface
                 return $redirect->setPath('withdrawal/index/view', ['order_id' => $orderId]);
             }
 
-            // Build a map of visible order items keyed by item_id for validation
-            $orderItemsById = [];
-            foreach ($order->getAllVisibleItems() as $item) {
-                $orderItemsById[(int) $item->getItemId()] = $item;
+            // If partial withdrawal is disabled, force-select all order items
+            if (!$partialAllowed) {
+                $selectedItemIds = array_keys($orderItemsById);
+                $itemQtyMap = [];
             }
 
             // Validate that all selected items belong to this order
@@ -135,6 +143,14 @@ class Submit implements HttpPostActionInterface
                     $this->messageManager->addErrorMessage(__('Invalid item selection.'));
                     return $redirect->setPath('withdrawal/index/view', ['order_id' => $orderId]);
                 }
+            }
+
+            // When partial withdrawal is disabled but a partial selection was posted, reject it
+            if (!$partialAllowed && count($selectedItemIds) < count($orderItemsById)) {
+                $this->messageManager->addErrorMessage(
+                    __('Partial withdrawal is not enabled. Please withdraw the entire order.')
+                );
+                return $redirect->setPath('withdrawal/index/view', ['order_id' => $orderId]);
             }
 
             // Check that none of the selected items have already been withdrawn
