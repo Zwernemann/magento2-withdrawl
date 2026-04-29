@@ -5,7 +5,7 @@
 "var customer_email":"Customer Email",
 "var order_date":"Order Date",
 "var withdrawal_date":"Withdrawal Date",
-"var is_partial":"Is Partial Withdrawal",
+"var withdrawal_type_label":"Withdrawal Type Label (e.g. 'withdrawal' or 'partial withdrawal')",
 "var withdrawn_items":"Withdrawn Items (line-separated)",
 "var store.getFrontendName()":"Store Name"
 } @-->
@@ -16,13 +16,7 @@
     <tr class="email-intro">
         <td>
             <p>
-                {{depend is_partial}}
-                    {{trans "A new partial withdrawal request has been submitted."}}
-                {{/depend}}
-                {{depend is_partial}}
-                {{else}}
-                    {{trans "A new withdrawal request has been submitted."}}
-                {{/depend}}
+                {{trans "A new %withdrawal_type_label has been submitted." withdrawal_type_label=$withdrawal_type_label}}
             </p>
         </td>
     </tr>

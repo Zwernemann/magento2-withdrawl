@@ -2,10 +2,9 @@
 <!--@vars {
 "var order_increment_id":"Order Increment ID",
 "var customer_name":"Customer Name",
-"var customer_email":"Customer Email",
 "var order_date":"Order Date",
 "var withdrawal_date":"Withdrawal Date",
-"var is_partial":"Is Partial Withdrawal",
+"var withdrawal_type_label":"Withdrawal Type Label (e.g. 'withdrawal' or 'partial withdrawal')",
 "var withdrawn_items":"Withdrawn Items (line-separated)",
 "var store.getFrontendName()":"Store Name"
 } @-->
@@ -17,13 +16,7 @@
         <td>
             <p class="greeting">{{trans "Dear %customer_name," customer_name=$customer_name}}</p>
             <p>
-                {{depend is_partial}}
-                    {{trans "We have received your partial withdrawal request for Order #%order_increment_id." order_increment_id=$order_increment_id}}
-                {{/depend}}
-                {{depend is_partial}}
-                {{else}}
-                    {{trans "We have received your withdrawal request for Order #%order_increment_id." order_increment_id=$order_increment_id}}
-                {{/depend}}
+                {{trans "We have received your %withdrawal_type_label for Order #%order_increment_id." withdrawal_type_label=$withdrawal_type_label order_increment_id=$order_increment_id}}
             </p>
             <p>
                 {{trans "Your withdrawal request has been registered successfully."}}

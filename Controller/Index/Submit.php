@@ -235,13 +235,15 @@ class Submit implements HttpPostActionInterface
             }
 
             $templateVars = [
-                'order_increment_id' => $order->getIncrementId(),
-                'customer_name'      => $customerName,
-                'customer_email'     => $order->getCustomerEmail(),
-                'order_date'         => $order->getCreatedAt(),
-                'withdrawal_date'    => $this->dateTime->gmtDate(),
-                'is_partial'         => $isPartial,
-                'withdrawn_items'    => implode("\n", $itemLines),
+                'order_increment_id'    => $order->getIncrementId(),
+                'customer_name'         => $customerName,
+                'customer_email'        => $order->getCustomerEmail(),
+                'order_date'            => $order->getCreatedAt(),
+                'withdrawal_date'       => $this->dateTime->gmtDate(),
+                'withdrawal_type_label' => $isPartial
+                    ? (string) __('partial withdrawal')
+                    : (string) __('withdrawal'),
+                'withdrawn_items'       => implode("\n", $itemLines),
             ];
 
             $this->emailSender->sendCustomerEmail(
