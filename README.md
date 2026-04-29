@@ -272,6 +272,7 @@ The database table `zwernemann_withdrawal` remains and can be removed manually i
 
 ## Planned
 
+- Partitial withdrawl
 - Extend REST API to include write access
 - Individual withdrawal periods per product (via product attributes)
 
