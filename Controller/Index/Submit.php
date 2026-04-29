@@ -100,15 +100,6 @@ class Submit implements HttpPostActionInterface
                 }
             }
 
-            // Check if already withdrawn
-            if ($this->withdrawalRepository->hasWithdrawal($orderId)) {
-                $this->messageManager->addErrorMessage(__('A withdrawal request already exists for this order.'));
-                if ($isGuest) {
-                    return $redirect->setPath('withdrawal/guest/search');
-                }
-                return $redirect->setPath('sales/order/history');
-            }
-
             // Check if within withdrawal period
             if (!$this->config->isWithdrawalAllowed($order)) {
                 $this->messageManager->addErrorMessage(
@@ -118,6 +109,81 @@ class Submit implements HttpPostActionInterface
                     return $redirect->setPath('withdrawal/guest/search');
                 }
                 return $redirect->setPath('sales/order/history');
+            }
+
+            // Build a map of visible order items keyed by item_id
+            $orderItemsById = [];
+            foreach ($order->getAllVisibleItems() as $item) {
+                $orderItemsById[(int) $item->getItemId()] = $item;
+            }
+
+            $partialAllowed = $this->config->isPartialWithdrawalAllowed();
+
+            // Resolve selected items from POST
+            // selected_items[] contains order_item_ids; item_qty[<id>] contains the qty to withdraw
+            $selectedItemIds = array_map('intval', (array) $this->request->getParam('selected_items', []));
+            $itemQtyMap = (array) $this->request->getParam('item_qty', []);
+
+            if (empty($selectedItemIds)) {
+                $this->messageManager->addErrorMessage(
+                    __('Please select at least one item to withdraw.')
+                );
+                return $redirect->setPath('withdrawal/index/view', ['order_id' => $orderId]);
+            }
+
+            // If partial withdrawal is disabled, force-select all order items
+            if (!$partialAllowed) {
+                $selectedItemIds = array_keys($orderItemsById);
+                $itemQtyMap = [];
+            }
+
+            // Validate that all selected items belong to this order
+            foreach ($selectedItemIds as $selectedId) {
+                if (!isset($orderItemsById[$selectedId])) {
+                    $this->messageManager->addErrorMessage(__('Invalid item selection.'));
+                    return $redirect->setPath('withdrawal/index/view', ['order_id' => $orderId]);
+                }
+            }
+
+            // When partial withdrawal is disabled but a partial selection was posted, reject it
+            if (!$partialAllowed && count($selectedItemIds) < count($orderItemsById)) {
+                $this->messageManager->addErrorMessage(
+                    __('Partial withdrawal is not enabled. Please withdraw the entire order.')
+                );
+                return $redirect->setPath('withdrawal/index/view', ['order_id' => $orderId]);
+            }
+
+            // Check that none of the selected items have already been withdrawn
+            $alreadyWithdrawnIds = $this->withdrawalRepository->getWithdrawnOrderItemIds($orderId);
+            $alreadyWithdrawnSelected = array_intersect($selectedItemIds, $alreadyWithdrawnIds);
+            if (!empty($alreadyWithdrawnSelected)) {
+                $this->messageManager->addErrorMessage(
+                    __('One or more selected items have already been withdrawn.')
+                );
+                return $redirect->setPath('withdrawal/index/view', ['order_id' => $orderId]);
+            }
+
+            // Determine if this is a partial withdrawal
+            $allOrderItemIds = array_keys($orderItemsById);
+            $isPartial = count(array_diff($allOrderItemIds, $selectedItemIds)) > 0
+                || count(array_diff($alreadyWithdrawnIds, [])) > 0;
+
+            // Prepare item rows to store
+            $itemsToSave = [];
+            foreach ($selectedItemIds as $itemId) {
+                $orderItem = $orderItemsById[$itemId];
+                $requestedQty = isset($itemQtyMap[$itemId]) ? (float) $itemQtyMap[$itemId] : null;
+                $maxQty = (float) $orderItem->getQtyOrdered();
+                $qty = ($requestedQty !== null && $requestedQty > 0 && $requestedQty <= $maxQty)
+                    ? $requestedQty
+                    : $maxQty;
+
+                $itemsToSave[] = [
+                    'order_item_id' => $itemId,
+                    'name'          => $orderItem->getName(),
+                    'sku'           => $orderItem->getSku(),
+                    'qty'           => $qty,
+                ];
             }
 
             // Build customer name
@@ -132,28 +198,52 @@ class Submit implements HttpPostActionInterface
             // Create withdrawal record
             $connection = $this->resource->getConnection();
             $connection->insert('zwernemann_withdrawal', [
-                'order_id' => $order->getEntityId(),
+                'order_id'          => $order->getEntityId(),
                 'order_increment_id' => $order->getIncrementId(),
-                'customer_email' => $order->getCustomerEmail(),
-                'customer_name' => $customerName,
-                'status' => 'pending',
-                'order_created_at' => $order->getCreatedAt(),
-                'created_at' => $this->dateTime->gmtDate(),
+                'customer_email'    => $order->getCustomerEmail(),
+                'customer_name'     => $customerName,
+                'status'            => 'pending',
+                'is_partial'        => $isPartial ? 1 : 0,
+                'order_created_at'  => $order->getCreatedAt(),
+                'created_at'        => $this->dateTime->gmtDate(),
             ]);
 
-            // Add comment to order history
-            $order->addCommentToStatusHistory(
-                __('Withdrawal requested by customer on %1.', $this->dateTime->gmtDate())
-            );
+            $withdrawalId = (int) $connection->lastInsertId();
+
+            // Save selected items
+            $this->withdrawalRepository->saveWithdrawalItems($withdrawalId, $itemsToSave);
+
+            // Build order comment
+            if ($isPartial) {
+                $itemNames = array_column($itemsToSave, 'name');
+                $orderComment = __(
+                    'Partial withdrawal requested by customer on %1. Items: %2',
+                    $this->dateTime->gmtDate(),
+                    implode(', ', $itemNames)
+                );
+            } else {
+                $orderComment = __('Withdrawal requested by customer on %1.', $this->dateTime->gmtDate());
+            }
+
+            $order->addCommentToStatusHistory($orderComment);
             $this->orderRepository->save($order);
 
-            // Send emails
+            // Prepare email variables including item list
+            $itemLines = [];
+            foreach ($itemsToSave as $savedItem) {
+                $itemLines[] = sprintf('%s (SKU: %s) x %s', $savedItem['name'], $savedItem['sku'], (int) $savedItem['qty']);
+            }
+
             $templateVars = [
-                'order_increment_id' => $order->getIncrementId(),
-                'customer_name' => $customerName,
-                'customer_email' => $order->getCustomerEmail(),
-                'order_date' => $order->getCreatedAt(),
-                'withdrawal_date' => $this->dateTime->gmtDate(),
+                'order_increment_id'    => $order->getIncrementId(),
+                'customer_name'         => $customerName,
+                'customer_email'        => $order->getCustomerEmail(),
+                'order_date'            => $order->getCreatedAt(),
+                'withdrawal_date'       => $this->dateTime->gmtDate(),
+                'withdrawal_type_label' => $isPartial
+                    ? (string) __('partial withdrawal')
+                    : (string) __('withdrawal'),
+                'withdrawn_items'       => implode("\n", $itemLines),
             ];
 
             $this->emailSender->sendCustomerEmail(
@@ -163,7 +253,6 @@ class Submit implements HttpPostActionInterface
             );
             $this->emailSender->sendAdminEmail($templateVars);
 
-            // Redirect to success page
             return $redirect->setPath('withdrawal/index/success', [
                 'order_id' => $orderId,
             ]);

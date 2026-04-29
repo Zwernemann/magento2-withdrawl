@@ -36,6 +36,10 @@ Vor dem eigentlichen Widerruf sieht der Kunde eine Zusammenfassung seiner Bestel
 - Bis wann der Widerruf moeglich ist (berechnet ab Versanddatum der letzten Lieferung)
 - Einen Button zum endgueltigen Absenden -- mit vorgeschalteter Sicherheitsabfrage
 
+**Teilwiderruf (optional)**
+
+Wenn der Shopbetreiber den Teilwiderruf aktiviert hat, kann der Kunde einzelne Positionen aus der Bestellung auswaehlen, anstatt die gesamte Bestellung zu widerrufen. Jede Position verfuegt ueber eine Checkbox (standardmaessig aktiviert) und ein Mengenfeld. Bereits widerrufene Positionen werden ausgegraut dargestellt und koennen nicht erneut ausgewaehlt werden. Damit koennen fuer dieselbe Bestellung mehrere Teilwiderrufe eingereicht werden, bis alle Positionen abgedeckt sind.
+
 **Gastbestellungen**
 
 Kunden, die ohne Kundenkonto bestellt haben, erreichen den Widerruf ueber ein eigenes Suchformular. Dort genuegen Bestellnummer und E-Mail-Adresse, um die Bestellung zu finden und den Widerruf einzuleiten.
@@ -54,10 +58,21 @@ Unter *Verkäufe > Withdrawals* finden Sie eine tabellarische Uebersicht saemtli
 
 - ID, Bestellnummer, Kundenname, E-Mail
 - Status (Ausstehend / Bestaetigt / Abgelehnt)
+- Typ (Vollwiderruf / Teilwiderruf)
 - Datum der Bestellung und Datum des Widerrufs
 - Direktlink zur jeweiligen Bestellansicht
 
 Alle Spalten sind filterbar und sortierbar.
+
+**Widerrufs-Detailseite**
+
+Jede Zeile im Grid hat eine *Details anzeigen*-Aktion, die eine dedizierte Detailseite öffnet. Dort werden angezeigt:
+
+- Alle Metadaten: Kundenname und E-Mail, Bestellnummer, Widerrufstyp, Status, Bestelldatum und Widerrufsdatum
+- Schnellaktions-Buttons zum direkten Bestätigen oder Ablehnen des Antrags auf der Seite
+- Eine vollständige Tabelle der widerrufenen Positionen mit Produktname, Artikelnummer und Menge – eindeutig als Voll- oder Teilwiderruf gekennzeichnet
+
+Damit lässt sich genau nachvollziehen, welche Artikel ein Kunde widerrufen hat – ohne den Adminbereich verlassen zu müssen.
 
 **Automatische Benachrichtigung per E-Mail**
 
@@ -79,6 +94,7 @@ Im Admin unter *Stores > Configuration > Sales > Withdrawal Settings*:
 - Modul ein- und ausschalten
 - Empfaenger-Adresse fuer Benachrichtigungen festlegen
 - Widerrufsfrist in Tagen einstellen, gezaehlt ab Versanddatum der letzten Lieferung (Standard: 14)
+- Teilwiderruf aktivieren oder deaktivieren (Standard: Nein)
 - E-Mail-Absender und Vorlagen waehlen
 
 ---
@@ -180,8 +196,9 @@ php bin/magento cache:flush
 3. **Modul aktivieren** auf *Ja* setzen
 4. **Benachrichtigungs-E-Mail** eintragen -- hierhin gehen die Widerrufs-Meldungen
 5. **Widerrufsfrist** anpassen, falls die gesetzliche Frist abweicht
-6. Bei Bedarf E-Mail-Absender und Vorlagen konfigurieren
-7. Speichern und Cache leeren
+6. **Teilwiderruf erlauben** auf *Ja* setzen, wenn Kunden einzelne Artikel widerrufen duerfen sollen
+7. Bei Bedarf E-Mail-Absender und Vorlagen konfigurieren
+8. Speichern und Cache leeren
 
 ### Gastbestellungs-Formular verlinken
 
@@ -212,11 +229,21 @@ php bin/magento cache:flush
 
 Danach das Verzeichnis `app/code/Zwernemann/Withdrawal/` loeschen.
 
-Die Datenbanktabelle `zwernemann_withdrawal` bleibt erhalten und kann bei Bedarf manuell entfernt werden.
+Die Datenbanktabellen `zwernemann_withdrawal` und `zwernemann_withdrawal_items` bleiben erhalten und koennen bei Bedarf manuell entfernt werden.
 
 ---
 
 ## Versionshistorie
+
+### 1.6.0
+
+- Teilwiderruf: Kunden koennen beim Einreichen eines Widerrufs einzelne Positionen und Mengen auswaehlen
+- Neue Backend-Einstellung *Teilwiderruf erlauben* (Standard: Nein) -- das bisherige Verhalten (Vollwiderruf) bleibt die Voreinstellung
+- Bereits widerrufene Positionen werden ausgegraut; weitere Teilwiderrufe fuer verbliebene Positionen sind moeglich
+- Neue Datenbanktabelle `zwernemann_withdrawal_items` speichert die positionsgenauen Widerrufsdaten
+- Admin-Grid zeigt neue Spalte *Typ* (Vollwiderruf / Teilwiderruf)
+- Neue Admin-Detailseite (*Details anzeigen*) zeigt alle Widerrufsmetadaten, Schnellaktionen zum Bestätigen/Ablehnen sowie eine vollständige Tabelle der widerrufenen Positionen mit Name, Artikelnummer und Menge
+- E-Mail-Benachrichtigungen enthalten jetzt die Liste der widerrufenen Positionen
 
 ### 1.5.0
 - Neu hinzugefügte Sprachen: Bulgarisch, Dänisch, Estnisch, Finnisch, Französisch, Griechisch, Irisch, Italienisch, Kroatisch, Lettisch, Litauisch, Maltesisch, Niederländisch, Polnisch, Portugiesisch, Rumänisch, Schwedisch, Slowakisch, Slowenisch, Spanisch, Tschechisch, Ungarisch. Das Modul unterstützt jetzt alle 24 offiziellen Amtssprachen der Europäischen Union. Alle Übersetzungen verwenden den juristisch korrekten Begriff für das gesetzliche Widerrufsrecht gemäß EU-Verbraucherrechterichtlinie (2011/83/EU).
@@ -278,6 +305,7 @@ Die Datenbanktabelle `zwernemann_withdrawal` bleibt erhalten und kann bei Bedarf
 
 - REST API um Schreibzugriffe erweitern
 - Individuelle Widerrufsfristen pro Produkt (ueber Produktattribute)
+
 
 ---
 

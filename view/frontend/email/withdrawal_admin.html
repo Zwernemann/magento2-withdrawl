@@ -5,6 +5,8 @@
 "var customer_email":"Customer Email",
 "var order_date":"Order Date",
 "var withdrawal_date":"Withdrawal Date",
+"var withdrawal_type_label":"Withdrawal Type Label (e.g. 'withdrawal' or 'partial withdrawal')",
+"var withdrawn_items":"Withdrawn Items (line-separated)",
 "var store.getFrontendName()":"Store Name"
 } @-->
 
@@ -14,7 +16,7 @@
     <tr class="email-intro">
         <td>
             <p>
-                {{trans "A new withdrawal request has been submitted."}}
+                {{trans "A new %withdrawal_type_label has been submitted." withdrawal_type_label=$withdrawal_type_label}}
             </p>
         </td>
     </tr>
@@ -41,6 +43,12 @@
                     <td><strong>{{trans "Withdrawal Requested:"}}</strong></td>
                     <td>{{var withdrawal_date}}</td>
                 </tr>
+                {{depend withdrawn_items}}
+                <tr>
+                    <td><strong>{{trans "Withdrawn Items:"}}</strong></td>
+                    <td style="white-space: pre-line;">{{var withdrawn_items}}</td>
+                </tr>
+                {{/depend}}
             </table>
         </td>
     </tr>

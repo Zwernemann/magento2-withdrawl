@@ -18,6 +18,9 @@ class View extends Template
     private $withdrawalRepository;
     private $order;
 
+    /** @var int[]|null */
+    private $withdrawnItemIds = null;
+
     public function __construct(
         Context $context,
         RequestInterface $request,
@@ -53,6 +56,11 @@ class View extends Template
         return $this->getUrl('withdrawal/index/submit');
     }
 
+    public function isPartialWithdrawalAllowed(): bool
+    {
+        return $this->config->isPartialWithdrawalAllowed();
+    }
+
     public function isWithdrawalAllowed(): bool
     {
         $order = $this->getOrder();
@@ -62,13 +70,67 @@ class View extends Template
         return $this->config->isWithdrawalAllowed($order);
     }
 
+    /**
+     * Returns order_item_ids that have already been covered by a withdrawal request.
+     *
+     * @return int[]
+     */
+    public function getWithdrawnOrderItemIds(): array
+    {
+        if ($this->withdrawnItemIds === null) {
+            $order = $this->getOrder();
+            $this->withdrawnItemIds = $order
+                ? $this->withdrawalRepository->getWithdrawnOrderItemIds((int) $order->getEntityId())
+                : [];
+        }
+        return $this->withdrawnItemIds;
+    }
+
+    /**
+     * Returns true only when every visible order item has already been withdrawn.
+     */
     public function hasExistingWithdrawal(): bool
     {
         $order = $this->getOrder();
         if (!$order) {
             return false;
         }
-        return $this->withdrawalRepository->hasWithdrawal((int) $order->getEntityId());
+
+        $withdrawnIds = $this->getWithdrawnOrderItemIds();
+        if (empty($withdrawnIds)) {
+            return false;
+        }
+
+        $allItemIds = array_map(
+            fn($item) => (int) $item->getItemId(),
+            $order->getAllVisibleItems()
+        );
+
+        return count(array_diff($allItemIds, $withdrawnIds)) === 0;
+    }
+
+    /**
+     * Returns true when some items are already withdrawn but not all.
+     */
+    public function hasPartialWithdrawal(): bool
+    {
+        $order = $this->getOrder();
+        if (!$order) {
+            return false;
+        }
+
+        $withdrawnIds = $this->getWithdrawnOrderItemIds();
+        if (empty($withdrawnIds)) {
+            return false;
+        }
+
+        $allItemIds = array_map(
+            fn($item) => (int) $item->getItemId(),
+            $order->getAllVisibleItems()
+        );
+
+        $remaining = array_diff($allItemIds, $withdrawnIds);
+        return count($remaining) > 0;
     }
 
     public function getWithdrawalDeadline(): string

@@ -16,6 +16,7 @@ class Config extends AbstractHelper
     const XML_PATH_EMAIL_TEMPLATE_ADMIN = 'zwernemann_withdrawal/email/admin_template';
     const XML_PATH_EMAIL_SENDER = 'zwernemann_withdrawal/email/sender';
     const XML_PATH_ALLOWED_ORDER_STATUSES = 'zwernemann_withdrawal/general/allowed_order_statuses';
+    const XML_PATH_ALLOW_PARTIAL_WITHDRAWAL = 'zwernemann_withdrawal/general/allow_partial_withdrawal';
 
     private ShipmentCollectionFactory $shipmentCollectionFactory;
 
@@ -53,6 +54,15 @@ class Config extends AbstractHelper
             $storeId
         );
         return $value ? (int) $value : 14;
+    }
+
+    public function isPartialWithdrawalAllowed($storeId = null): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::XML_PATH_ALLOW_PARTIAL_WITHDRAWAL,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
     }
 
     public function getAllowedOrderStatuses($storeId = null): array

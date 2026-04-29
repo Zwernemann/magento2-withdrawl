@@ -28,12 +28,16 @@ Additionally, a **"Withdrawal Order"** button is displayed on the order details 
 
 **Withdrawal detail page**
 
-Refore the actual withdrawal, the customer sees a summary of their order:
+Before the actual withdrawal, the customer sees a summary of their order:
 
 - Order number, date, status, total amount
 - All ordered items with name, SKU, quantity, and price
 - The deadline until which withdrawal is possible, calculated from the date of the last shipment
-- A button for final submission ₓ with a preceding security confirmation
+- A button for final submission – with a preceding security confirmation
+
+**Partial withdrawal (optional)**
+
+If the shop operator has activated the partial withdrawal option, the customer can select individual items from the order instead of withdrawing the entire order. Each item has a checkbox (pre-checked) and a quantity input field. Items that have already been withdrawn in a previous request are shown greyed out and cannot be selected again. This means several partial withdrawal requests can be submitted for the same order until all items are covered.
 
 **Guest orders**
 
@@ -53,10 +57,21 @@ Under *Sales > Withdrawals*, you will find a tabular overview of all received wi
 
 - ID, order number, customer name, email
 - Status (Pending / Confirmed / Rejected)
+- Type (Full / Partial)
 - Date of order and date of withdrawal
 - Direct link to the respective order view
 
 All columns can be filtered and sorted.
+
+**Withdrawal detail page**
+
+Each row in the grid has a *View Details* action that opens a dedicated detail page. It shows:
+
+- All metadata: customer name and email, order number, withdrawal type, status, order date and withdrawal date
+- Quick action buttons to confirm or reject the request directly on the page
+- A complete table of the withdrawn items including product name, SKU and quantity – clearly labelled as full or partial withdrawal
+
+This makes it possible to review exactly which items a customer has withdrawn without leaving the admin area.
 
 **Automatic email notification**
 
@@ -78,6 +93,7 @@ In the admin under *Stores > Configuration > Sales > Withdrawal Settings*:
 - Enable/Disable the module
 - Set recipient address for notifications
 - Set withdrawal period in days, counted from the last shipment date (Default: 14)
+- Enable/Disable partial withdrawal (Default: No)
 - Select email sender and templates
 
 ---
@@ -175,11 +191,12 @@ php bin/magento cache:flush
 
 1. Log into Magento Admin
 2. Navigate to **Stores > Configuration > Sales > Withdrawal Settings**
-3. Set **"Enable Module** to *Yes*
-4. Enter **Notification Email** ₓ withdrawal notifications will be sent here
+3. Set **Enable Module** to *Yes*
+4. Enter **Notification Email** – withdrawal notifications will be sent here
 5. Adjust **Withdrawal Period** if the legal period differs
-6. Configure email sender and templates if necessary
-7. Save and flush cache
+6. Set **Allow Partial Withdrawal** to *Yes* if customers should be able to withdraw individual items
+7. Configure email sender and templates if necessary
+8. Save and flush cache
 
 ### Linking the Guest Order Form
 
@@ -210,11 +227,21 @@ php bin/magento cache:flush
 
 Then delete the directory `app/code/Zwernemann/Withdrawal/`.
 
-The database table `zwernemann_withdrawal` remains and can be removed manually if needed.
+The database tables `zwernemann_withdrawal` and `zwernemann_withdrawal_items` remain and can be removed manually if needed.
 
 ---
 
 ## Version History
+
+### 1.6.0
+
+- Partial withdrawal (Teilwiderruf): customers can now select individual items and quantities when submitting a withdrawal request
+- New backend setting *Allow Partial Withdrawal* (default: No) – full-order withdrawal remains the default behaviour
+- Already withdrawn items are shown greyed out; further partial requests can be submitted for the remaining items
+- New database table `zwernemann_withdrawal_items` stores the item-level withdrawal data
+- Admin grid shows a *Type* column (Full / Partial) for each withdrawal entry
+- New admin detail page (*View Details*) shows all withdrawal metadata, quick confirm/reject actions, and a full table of withdrawn items with name, SKU, and quantity
+- Email notifications now include the list of withdrawn items
 
 ### 1.5.0
 - Newly added languages: Bulgarian, Danish, Estonian, Finnish, French, Greek, Irish, Italian, Croatian, Latvian, Lithuanian, Maltese, Dutch, Polish, Portuguese, Romanian, Swedish, Slovak, Slovenian, Spanish, Czech, Hungarian. The module now supports all 24 official languages of the European Union. All translations use the legally correct term for the statutory right of withdrawal in accordance with the EU Consumer Rights Directive (2011/83/EU).
@@ -272,7 +299,6 @@ The database table `zwernemann_withdrawal` remains and can be removed manually i
 
 ## Planned
 
-- Partitial withdrawl from selected items of an order
 - Extend REST API to include write access
 - Individual withdrawal periods per product (via product attributes)
 

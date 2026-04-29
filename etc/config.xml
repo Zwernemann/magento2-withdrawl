@@ -6,6 +6,7 @@
             <general>
                 <enabled>1</enabled>
                 <withdrawal_period>14</withdrawal_period>
+                <allow_partial_withdrawal>0</allow_partial_withdrawal>
             </general>
             <email>
                 <sender>general</sender>

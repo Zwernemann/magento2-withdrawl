@@ -1,0 +1,165 @@
+<?php
+/** @var \Zwernemann\Withdrawal\Block\Adminhtml\Withdrawal\View $block */
+$withdrawal = $block->getWithdrawal();
+$order      = $block->getOrder();
+$items      = $block->getWithdrawalItems();
+?>
+<?php if (!$withdrawal): ?>
+<div class="message message-error">
+    <span><?= $block->escapeHtml(__('The withdrawal request could not be found.')) ?></span>
+</div>
+<?php else: ?>
+
+<div class="admin__page-nav-title">
+    <a href="<?= $block->escapeUrl($block->getBackUrl()) ?>" class="action-default">
+        &larr; <?= $block->escapeHtml(__('Back to Withdrawal Requests')) ?>
+    </a>
+</div>
+
+<style>
+    .withdrawal-detail-table th {
+        background-color: #f0f0f0 !important;
+        color: #333 !important;
+        font-weight: 600;
+        text-align: left;
+        padding: 8px 12px;
+    }
+    .withdrawal-detail-table td {
+        border-top: 1px solid;
+        border-bottom: 1px solid;
+    }
+</style>
+
+<h2 style="margin: 20px 0 16px;"><?= $block->escapeHtml(__('Withdrawal Request #%1', $withdrawal->getId())) ?></h2>
+
+<div class="admin__data-grid-wrap">
+
+    <!-- Header row: meta + status actions -->
+    <div style="display:flex; gap:20px; flex-wrap:wrap; margin-bottom:24px;">
+
+        <!-- Withdrawal details -->
+        <div class="admin__field" style="flex:1; min-width:280px;">
+            <table class="data-grid withdrawal-detail-table" style="width:100%;">
+                <tbody>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Order #')) ?></th>
+                        <td>
+                            <?php if ($order): ?>
+                                <a href="<?= $block->escapeUrl($block->getOrderViewUrl()) ?>">
+                                    <?= $block->escapeHtml($withdrawal->getData('order_increment_id')) ?>
+                                </a>
+                            <?php else: ?>
+                                <?= $block->escapeHtml($withdrawal->getData('order_increment_id')) ?>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Customer Name')) ?></th>
+                        <td><?= $block->escapeHtml($withdrawal->getData('customer_name') ?? '—') ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Customer Email')) ?></th>
+                        <td><?= $block->escapeHtml($withdrawal->getData('customer_email')) ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Type')) ?></th>
+                        <td>
+                            <?php if ($withdrawal->getData('is_partial')): ?>
+                                <span style="color:#e07000; font-weight:bold;">
+                                    <?= $block->escapeHtml(__('Partial')) ?>
+                                </span>
+                            <?php else: ?>
+                                <?= $block->escapeHtml(__('Full')) ?>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Status')) ?></th>
+                        <td><?= $block->escapeHtml($block->getStatusLabel($withdrawal->getData('status'))) ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Order Placed At')) ?></th>
+                        <td><?= $block->escapeHtml($block->formatWithdrawalDate((string) $withdrawal->getData('order_created_at'))) ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Withdrawal Requested At')) ?></th>
+                        <td><?= $block->escapeHtml($block->formatWithdrawalDate((string) $withdrawal->getData('created_at'))) ?></td>
+                    </tr>
+                    <?php if ($withdrawal->getData('comment')): ?>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Comment')) ?></th>
+                        <td><?= $block->escapeHtml($withdrawal->getData('comment')) ?></td>
+                    </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Quick actions -->
+        <div style="min-width:200px;">
+            <div style="font-weight:bold; margin-bottom:8px;"><?= $block->escapeHtml(__('Actions')) ?></div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+                <?php if ($withdrawal->getData('status') !== 'confirmed'): ?>
+                <a href="<?= $block->escapeUrl($block->getUrl('withdrawal/index/updatestatus', [
+                    'id'     => $withdrawal->getId(),
+                    'status' => 'confirmed',
+                ])) ?>"
+                   class="action-default action-primary"
+                   onclick="return confirm('<?= $block->escapeJs(__('Confirm this withdrawal request?')) ?>')">
+                    <?= $block->escapeHtml(__('Confirm')) ?>
+                </a>
+                <?php endif; ?>
+                <?php if ($withdrawal->getData('status') !== 'rejected'): ?>
+                <a href="<?= $block->escapeUrl($block->getUrl('withdrawal/index/updatestatus', [
+                    'id'     => $withdrawal->getId(),
+                    'status' => 'rejected',
+                ])) ?>"
+                   class="action-default"
+                   onclick="return confirm('<?= $block->escapeJs(__('Reject this withdrawal request?')) ?>')">
+                    <?= $block->escapeHtml(__('Reject')) ?>
+                </a>
+                <?php endif; ?>
+                <?php if ($order): ?>
+                <a href="<?= $block->escapeUrl($block->getOrderViewUrl()) ?>" class="action-default">
+                    <?= $block->escapeHtml(__('View Order')) ?>
+                </a>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
+    <!-- Withdrawn items table -->
+    <div>
+        <h3 style="margin-bottom:10px;">
+            <?php if ($withdrawal->getData('is_partial')): ?>
+                <?= $block->escapeHtml(__('Withdrawn Items (Partial Withdrawal)')) ?>
+            <?php else: ?>
+                <?= $block->escapeHtml(__('Withdrawn Items (Full Withdrawal)')) ?>
+            <?php endif; ?>
+        </h3>
+        <?php if (!empty($items)): ?>
+        <table class="data-grid" style="width:100%;">
+            <thead>
+                <tr>
+                    <th><?= $block->escapeHtml(__('Product Name')) ?></th>
+                    <th><?= $block->escapeHtml(__('SKU')) ?></th>
+                    <th><?= $block->escapeHtml(__('Qty Withdrawn')) ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($items as $item): ?>
+                <tr>
+                    <td><?= $block->escapeHtml($item['order_item_name'] ?? '—') ?></td>
+                    <td><?= $block->escapeHtml($item['order_item_sku'] ?? '—') ?></td>
+                    <td><?= (int) $item['qty_withdrawn'] ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php else: ?>
+        <p><?= $block->escapeHtml(__('No item details recorded for this withdrawal request.')) ?></p>
+        <?php endif; ?>
+    </div>
+
+</div>
+<?php endif; ?>

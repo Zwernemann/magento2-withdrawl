@@ -2,9 +2,10 @@
 <!--@vars {
 "var order_increment_id":"Order Increment ID",
 "var customer_name":"Customer Name",
-"var customer_email":"Customer Email",
 "var order_date":"Order Date",
 "var withdrawal_date":"Withdrawal Date",
+"var withdrawal_type_label":"Withdrawal Type Label (e.g. 'withdrawal' or 'partial withdrawal')",
+"var withdrawn_items":"Withdrawn Items (line-separated)",
 "var store.getFrontendName()":"Store Name"
 } @-->
 
@@ -15,7 +16,7 @@
         <td>
             <p class="greeting">{{trans "Dear %customer_name," customer_name=$customer_name}}</p>
             <p>
-                {{trans "We have received your withdrawal request for Order #%order_increment_id." order_increment_id=$order_increment_id}}
+                {{trans "We have received your %withdrawal_type_label for Order #%order_increment_id." withdrawal_type_label=$withdrawal_type_label order_increment_id=$order_increment_id}}
             </p>
             <p>
                 {{trans "Your withdrawal request has been registered successfully."}}
@@ -37,6 +38,12 @@
                     <td><strong>{{trans "Withdrawal Requested:"}}</strong></td>
                     <td>{{var withdrawal_date}}</td>
                 </tr>
+                {{depend withdrawn_items}}
+                <tr>
+                    <td><strong>{{trans "Withdrawn Items:"}}</strong></td>
+                    <td style="white-space: pre-line;">{{var withdrawn_items}}</td>
+                </tr>
+                {{/depend}}
             </table>
         </td>
     </tr>
