@@ -66,6 +66,19 @@ class Actions extends Column
                         ];
                     }
 
+                    $actions['delete'] = [
+                        'href' => $this->urlBuilder->getUrl(
+                            'withdrawal/index/delete',
+                            ['id' => $item['entity_id']]
+                        ),
+                        'label' => __('Delete'),
+                        'confirm' => [
+                            'title' => __('Delete Withdrawal'),
+                            'message' => __('Are you sure you want to delete this withdrawal record?'),
+                        ],
+                        'post' => true,
+                    ];
+
                     $item[$this->getData('name')] = $actions;
                 }
             }

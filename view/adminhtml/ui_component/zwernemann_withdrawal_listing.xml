@@ -56,6 +56,17 @@
                     </confirm>
                 </settings>
             </action>
+            <action name="delete">
+                <settings>
+                    <confirm>
+                        <message translate="true">Are you sure you want to delete the selected withdrawal records?</message>
+                        <title translate="true">Delete Withdrawals</title>
+                    </confirm>
+                    <url path="withdrawal/index/massDelete"/>
+                    <type>delete</type>
+                    <label translate="true">Delete</label>
+                </settings>
+            </action>
         </massaction>
         <paging name="listing_paging"/>
     </listingToolbar>
