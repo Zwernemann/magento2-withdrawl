@@ -24,6 +24,10 @@ $items      = $block->getWithdrawalItems();
         text-align: left;
         padding: 8px 12px;
     }
+    .withdrawal-detail-table td {
+        border-top: 1px solid;
+        border-bottom: 1px solid;
+    }
 </style>
 
 <h2 style="margin: 20px 0 16px;"><?= $block->escapeHtml(__('Withdrawal Request #%1', $withdrawal->getId())) ?></h2>
