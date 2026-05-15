@@ -235,6 +235,10 @@ Die Datenbanktabellen `zwernemann_withdrawal` und `zwernemann_withdrawal_items` 
 
 ## Versionshistorie
 
+### 1.7.0
+
+- Bugfix: Datenbankfehler bei Shops mit Tabellenpräfix
+  
 ### 1.6.0
 
 - Teilwiderruf: Kunden koennen beim Einreichen eines Widerrufs einzelne Positionen und Mengen auswaehlen
