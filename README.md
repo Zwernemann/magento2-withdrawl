@@ -233,6 +233,10 @@ The database tables `zwernemann_withdrawal` and `zwernemann_withdrawal_items` re
 
 ## Version History
 
+### 1.7.0
+
+- Fix database table name resolution for shops with a table prefix
+  
 ### 1.6.0
 
 - Partial withdrawal (Teilwiderruf): customers can now select individual items and quantities when submitting a withdrawal request
