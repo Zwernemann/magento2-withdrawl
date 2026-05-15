@@ -233,7 +233,7 @@ The database tables `zwernemann_withdrawal` and `zwernemann_withdrawal_items` re
 
 ## Version History
 
-### 1.7.0
+### 1.7.1
 
 - Fix database table name resolution for shops with a table prefix
   
