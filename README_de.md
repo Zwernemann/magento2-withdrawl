@@ -235,7 +235,7 @@ Die Datenbanktabellen `zwernemann_withdrawal` und `zwernemann_withdrawal_items` 
 
 ## Versionshistorie
 
-### 1.7.0
+### 1.7.1
 
 - Bugfix: Datenbankfehler bei Shops mit Tabellenpräfix
   
