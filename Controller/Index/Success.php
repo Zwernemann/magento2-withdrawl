@@ -21,9 +21,6 @@ class Success implements HttpGetActionInterface
             return $this->redirectFactory->create()->setPath('/');
         }
 
-        $page = $this->pageFactory->create();
-        $page->getConfig()->getTitle()->set(__('Withdrawal Submitted Successfully'));
-
-        return $page;
+        return $this->pageFactory->create();
     }
 }

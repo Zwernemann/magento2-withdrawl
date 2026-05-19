@@ -36,8 +36,6 @@ class Search implements HttpGetActionInterface
             return $redirect->setPath('/');
         }
 
-        $page = $this->pageFactory->create();
-        $page->getConfig()->getTitle()->set(__('Search Order for Withdrawal'));
-        return $page;
+        return $this->pageFactory->create();
     }
 }

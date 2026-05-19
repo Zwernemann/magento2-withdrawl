@@ -38,9 +38,6 @@ class View implements HttpGetActionInterface
             return $redirect->setPath($fallbackRoute);
         }
 
-        $page = $this->pageFactory->create();
-        $page->getConfig()->getTitle()->set(__('Withdrawal for Order #%1', $order->getIncrementId()));
-
-        return $page;
+        return $this->pageFactory->create();
     }
 }
