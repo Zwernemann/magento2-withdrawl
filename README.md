@@ -233,6 +233,9 @@ The database tables `zwernemann_withdrawal` and `zwernemann_withdrawal_items` re
 
 ## Version History
 
+### 1.7.3
+- Full PHP7.4 compatibility
+  
 ### 1.7.2
 
 - Fix multiple Magento 2 issues: refactor select-all into AMD component, remove inline styles in favor of CSS, rename reserved “select” class, persist guest email via session instead of URL, and correct withdrawal validation flow.
