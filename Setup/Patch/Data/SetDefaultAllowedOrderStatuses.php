@@ -10,11 +10,16 @@ use Magento\Sales\Model\ResourceModel\Order\Status\CollectionFactory;
 class SetDefaultAllowedOrderStatuses implements DataPatchInterface
 {
     private const CONFIG_PATH = 'zwernemann_withdrawal/general/allowed_order_statuses';
+    private WriterInterface $configWriter;
+    private CollectionFactory $statusCollectionFactory;
 
     public function __construct(
-        private readonly WriterInterface $configWriter,
-        private readonly CollectionFactory $statusCollectionFactory
-    ) {}
+        WriterInterface $configWriter,
+        CollectionFactory $statusCollectionFactory
+    ) {
+        $this->statusCollectionFactory = $statusCollectionFactory;
+        $this->configWriter = $configWriter;
+    }
 
     public function apply(): self
     {
