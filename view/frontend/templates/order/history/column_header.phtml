@@ -1,2 +1,8 @@
-<?php /** @var \Magento\Framework\View\Element\Template $block */ ?>
-<th scope="col" class="col withdrawal"><?= $block->escapeHtml(__('Withdrawal')) ?></th>
+<?php /** @var \Zwernemann\Withdrawal\Block\Order\WithdrawalButton $block */ ?>
+
+
+<?php if ($block->isEnabled()): ?>
+    <th scope="col" class="col withdrawal">
+        <?= $block->escapeHtml(__('Withdrawal')) ?>
+    </th>
+<?php endif; ?>
