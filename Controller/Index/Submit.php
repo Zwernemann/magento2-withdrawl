@@ -242,7 +242,7 @@ class Submit implements HttpPostActionInterface
                 'withdrawal_date'       => $this->dateTime->gmtDate(),
                 'withdrawal_type_label' => $isPartial
                     ? (string) __('partial withdrawal')
-                    : (string) __('withdrawal'),
+                    : (string) __('Withdrawal'),
                 'withdrawn_items'       => implode("\n", $itemLines),
             ];
 
