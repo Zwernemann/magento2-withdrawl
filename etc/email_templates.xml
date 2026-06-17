@@ -13,4 +13,10 @@
               type="html"
               module="Zwernemann_Withdrawal"
               area="frontend"/>
+    <template id="zwernemann_withdrawal_email_status_template"
+          label="Withdrawal Status Update"
+          file="withdrawal_status.html"
+          type="html"
+          module="Zwernemann_Withdrawal"
+          area="frontend"/>
 </config>

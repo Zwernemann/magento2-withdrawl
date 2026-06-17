@@ -93,4 +93,35 @@ class Sender
         }
         return (string) $email;
     }
+
+    public function sendStatusUpdateEmail(
+    array $templateVars,
+    string $customerEmail,
+    string $customerName
+    ): void {
+        try {
+            $storeId = $this->storeManager->getStore()->getId();
+
+            $sender = $this->config->getEmailSender((int)$storeId);
+
+            $templateId = $this->config->getStatusEmailTemplate((int)$storeId);
+
+            $this->transportBuilder
+                ->setTemplateIdentifier($templateId)
+                ->setTemplateOptions([
+                    'area' => Area::AREA_FRONTEND,
+                    'store' => $storeId,
+                ])
+                ->setTemplateVars($templateVars)
+                ->setFromByScope($sender, $storeId)
+                ->addTo($customerEmail, $customerName)
+                ->getTransport()
+                ->sendMessage();
+
+        } catch (\Exception $e) {
+            $this->logger->error(
+                'Withdrawal status email error: ' . $e->getMessage()
+            );
+        }
+    }
 }
