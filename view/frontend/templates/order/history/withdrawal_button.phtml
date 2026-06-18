@@ -10,7 +10,7 @@ $order = $block->getOrder();
             </span>
         <?php elseif ($block->isWithdrawalAllowed($order)): ?>
             <a href="<?= $block->escapeUrl($block->getViewUrl((int) $order->getEntityId())) ?>"
-               class="action withdrawal"
+               class="action primary"
                title="<?= $block->escapeHtmlAttr(__('Withdraw Order')) ?>">
                 <span><?= $block->escapeHtml(__('Withdraw')) ?></span>
             </a>
