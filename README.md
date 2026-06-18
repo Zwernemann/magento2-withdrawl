@@ -233,6 +233,14 @@ The database tables `zwernemann_withdrawal` and `zwernemann_withdrawal_items` re
 
 ## Version History
 
+### 1.8.0
+- Admin: order history now records a comment when a withdrawal request is confirmed or rejected
+- Admin: withdrawal detail page now links to the related shipment(s) and their packing slip PDF
+- Security: the withdrawal success page is now bound to the customer session and no longer exposes an enumerable order ID in the URL; added robots noindex,nofollow
+- Fix: corrected a timezone difference between the admin grid and the withdrawal detail page
+- Completed and corrected translations across all 24 languages (withdrawal type label in customer email and the success page title are now translated)
+- Clarified wording: customer order overview now shows "Withdrawal period expired"; clearer message when re-selecting already-withdrawn items
+  
 ### 1.7.3
 - Full PHP7.4 compatibility
   
