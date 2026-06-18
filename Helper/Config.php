@@ -17,6 +17,7 @@ class Config extends AbstractHelper
     const XML_PATH_EMAIL_SENDER = 'zwernemann_withdrawal/email/sender';
     const XML_PATH_ALLOWED_ORDER_STATUSES = 'zwernemann_withdrawal/general/allowed_order_statuses';
     const XML_PATH_ALLOW_PARTIAL_WITHDRAWAL = 'zwernemann_withdrawal/general/allow_partial_withdrawal';
+    const XML_PATH_EMAIL_TEMPLATE_STATUS = 'zwernemann_withdrawal/email/status_template';
 
     private ShipmentCollectionFactory $shipmentCollectionFactory;
 
@@ -156,5 +157,16 @@ class Config extends AbstractHelper
 
         $shipmentDate->modify('+' . $this->getWithdrawalPeriodDays() . ' days');
         return $shipmentDate->format('d.m.Y');
+    }
+
+    public function getStatusEmailTemplate($storeId = null): string
+    {
+        $value = $this->scopeConfig->getValue(
+            self::XML_PATH_EMAIL_TEMPLATE_STATUS,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+
+        return $value ?: 'zwernemann_withdrawal_email_status_template';
     }
 }

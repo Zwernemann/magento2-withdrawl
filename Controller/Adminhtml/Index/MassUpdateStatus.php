@@ -7,6 +7,7 @@ use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Ui\Component\MassAction\Filter;
 use Zwernemann\Withdrawal\Api\WithdrawalRepositoryInterface;
+use Zwernemann\Withdrawal\Model\Email\Sender;
 use Zwernemann\Withdrawal\Model\ResourceModel\Withdrawal\CollectionFactory;
 
 class MassUpdateStatus extends Action
@@ -18,17 +19,20 @@ class MassUpdateStatus extends Action
     private $filter;
     private $collectionFactory;
     private $withdrawalRepository;
+    private Sender $emailSender;
 
     public function __construct(
         Context $context,
         Filter $filter,
         CollectionFactory $collectionFactory,
-        WithdrawalRepositoryInterface $withdrawalRepository
+        WithdrawalRepositoryInterface $withdrawalRepository,
+        Sender $emailSender
     ) {
         parent::__construct($context);
         $this->filter = $filter;
         $this->collectionFactory = $collectionFactory;
         $this->withdrawalRepository = $withdrawalRepository;
+        $this->emailSender = $emailSender;
     }
 
     public function execute()
@@ -45,7 +49,29 @@ class MassUpdateStatus extends Action
             $collection = $this->filter->getCollection($this->collectionFactory->create());
             $count = 0;
             foreach ($collection as $withdrawal) {
-                $this->withdrawalRepository->updateStatus((int) $withdrawal->getId(), $status);
+
+                if ($withdrawal->getStatus() === $status) {
+                    continue;
+                }
+
+                $this->withdrawalRepository->updateStatus(
+                    (int)$withdrawal->getId(),
+                    $status
+                );
+
+                $templateVars = [
+                    'customer_name'      => $withdrawal->getCustomerName(),
+                    'order_increment_id' => $withdrawal->getOrderIncrementId(),
+                    'is_confirmed'       => $status === 'confirmed' ? '1' : '',
+                    'is_rejected'        => $status === 'rejected' ? '1' : ''
+                ];
+
+                $this->emailSender->sendStatusUpdateEmail(
+                    $templateVars,
+                    $withdrawal->getCustomerEmail(),
+                    $withdrawal->getCustomerName()
+                );
+
                 $count++;
             }
             $this->messageManager->addSuccessMessage(

@@ -62,6 +62,12 @@
                     <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
                     <comment>Email template sent to the shop owner after withdrawal request.</comment>
                 </field>
+                <field id="status_template" translate="label comment" type="select" sortOrder="40"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Status Update Email Template</label>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                    <comment>Email template sent to the customer when the withdrawal status is updated.</comment>
+                </field>
             </group>
         </section>
     </system>

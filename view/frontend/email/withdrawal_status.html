@@ -1,0 +1,23 @@
+<!--@subject {{trans "Withdrawal Request Update for Order #%order_increment_id" order_increment_id=$order_increment_id}} @-->
+
+{{template config_path="design/email/header_template"}}
+
+<p>
+    {{trans "Hello %name," name=$customer_name}}
+</p>
+<p>
+    {{trans "We have reviewed your withdrawal request for order #%order_id." order_id=$order_increment_id}}
+</p>
+{{depend is_confirmed}}
+<p>{{trans "Your withdrawal request has been approved."}}</p>
+{{/depend}}
+
+{{depend is_rejected}}
+<p>{{trans "Your withdrawal request has been rejected."}}</p>
+{{/depend}}
+
+<p>
+    {{trans "If you have any questions, please contact us."}}
+</p>
+
+{{template config_path="design/email/footer_template"}}
