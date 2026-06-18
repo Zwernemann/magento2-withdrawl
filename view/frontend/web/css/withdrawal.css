@@ -1,23 +1,8 @@
 /* Withdrawal Module Styles */
 
-/* Order History - Withdrawal Button */
-.col.withdrawal .action.withdrawal {
-    display: inline-block;
-    padding: 5px 12px;
-    background-color: #e74c3c;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 3px;
-    font-size: 13px;
-    white-space: nowrap;
-}
-
-.col.withdrawal .action.withdrawal:hover {
-    background-color: #c0392b;
-    color: #fff;
-    text-decoration: none;
-}
-
+/* Order History - Withdrawal Button
+   Button styling is left to the theme (standard .action.primary markup);
+   no module-specific colors are enforced here. */
 .col.withdrawal .withdrawal-status {
     font-size: 13px;
     white-space: nowrap;
@@ -102,16 +87,6 @@
 
 .col-withdrawal-select {
     width: 40px;
-}
-
-.withdrawal-view-container .action.primary.withdraw {
-    background-color: #e74c3c;
-    border-color: #e74c3c;
-}
-
-.withdrawal-view-container .action.primary.withdraw:hover {
-    background-color: #c0392b;
-    border-color: #c0392b;
 }
 
 /* Success Page */
