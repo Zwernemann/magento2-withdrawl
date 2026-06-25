@@ -3,6 +3,23 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Zwernemann\Withdrawal\Api\WithdrawalRepositoryInterface"
                 type="Zwernemann\Withdrawal\Model\WithdrawalRepository"/>
+    <preference for="Zwernemann\Withdrawal\Api\WithdrawalConfirmationInterface"
+                type="Zwernemann\Withdrawal\Model\WithdrawalConfirmation"/>
+
+    <type name="Magento\Framework\Webapi\Backpressure\CompositeRequestTypeExtractor">
+        <arguments>
+            <argument name="extractors" xsi:type="array">
+                <item name="withdrawal" xsi:type="object">Zwernemann\Withdrawal\Model\Backpressure\WebapiRequestTypeExtractor</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\App\Backpressure\SlidingWindow\CompositeLimitConfigManager">
+        <arguments>
+            <argument name="configs" xsi:type="array">
+                <item name="withdrawal-api" xsi:type="object">Zwernemann\Withdrawal\Model\Backpressure\WithdrawalLimitConfigManager</item>
+            </argument>
+        </arguments>
+    </type>
 
     <!-- Grid Collection (virtual type based on SearchResult) -->
     <virtualType name="ZwernemannWithdrawalGridCollection"

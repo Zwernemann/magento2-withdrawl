@@ -63,6 +63,33 @@
                     <comment>Email template sent to the shop owner after withdrawal request.</comment>
                 </field>
             </group>
+            <group id="api" translate="label" sortOrder="30"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>REST API</label>
+                <field id="order_status" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Order Status after API Confirmation</label>
+                    <comment>Optional. Order status to set when a withdrawal is confirmed via the REST API. Leave empty to keep the current status.</comment>
+                    <source_model>Magento\Sales\Model\Config\Source\Order\Status</source_model>
+                    <can_be_empty>1</can_be_empty>
+                </field>
+                <field id="backpressure_enabled" translate="label comment" type="select" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Enable API Rate Limiting</label>
+                    <comment>Limits how many withdrawal API requests each client (IP) can make per period. Requires Redis in app/etc/env.php (backpressure/logger).</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="backpressure_limit" translate="label comment" type="text" sortOrder="30"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Rate Limit (requests per period)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+                <field id="backpressure_period" translate="label comment" type="text" sortOrder="40"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Rate Limit Period (seconds)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+            </group>
         </section>
     </system>
 </config>

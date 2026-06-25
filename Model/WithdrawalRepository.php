@@ -46,6 +46,36 @@ class WithdrawalRepository implements WithdrawalRepositoryInterface
         return $withdrawal;
     }
 
+    /**
+     * Create a withdrawal record from an order with all required fields populated.
+     */
+    public function createFromOrder(
+        \Magento\Sales\Api\Data\OrderInterface $order,
+        bool $isPartial = false,
+        ?string $comment = null
+    ): Withdrawal {
+        $customerName = trim($order->getCustomerFirstname() . ' ' . $order->getCustomerLastname());
+        if ($customerName === '' && $order->getBillingAddress()) {
+            $billingAddress = $order->getBillingAddress();
+            $customerName = trim($billingAddress->getFirstname() . ' ' . $billingAddress->getLastname());
+        }
+
+        $withdrawal = $this->withdrawalFactory->create();
+        $withdrawal->setData([
+            'order_id' => (int) $order->getEntityId(),
+            'order_increment_id' => $order->getIncrementId(),
+            'customer_email' => $order->getCustomerEmail(),
+            'customer_name' => $customerName,
+            'status' => 'pending',
+            'is_partial' => $isPartial ? 1 : 0,
+            'order_created_at' => $order->getCreatedAt(),
+            'created_at' => $this->dateTime->gmtDate(),
+            'comment' => $comment,
+        ]);
+        $this->resource->save($withdrawal);
+        return $withdrawal;
+    }
+
     public function getList()
     {
         $collection = $this->collectionFactory->create();
