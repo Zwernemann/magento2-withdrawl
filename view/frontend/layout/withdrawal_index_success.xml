@@ -5,6 +5,7 @@
     <head>
         <title>Withdrawal submitted</title>
         <meta name="robots" content="NOINDEX,NOFOLLOW"/>
+        <css src="Zwernemann_Withdrawal::css/withdrawal.css"/>  
     </head>
     <body>
         <referenceContainer name="content">
