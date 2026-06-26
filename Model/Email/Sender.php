@@ -28,8 +28,12 @@ class Sender
         $this->logger = $logger;
     }
 
-    public function sendCustomerEmail(array $templateVars, string $customerEmail, string $customerName): void
-    {
+    public function sendCustomerEmail(
+        array $templateVars,
+        string $customerEmail,
+        string $customerName,
+        bool $rethrowExceptions = false
+    ): void {
         try {
             $storeId = $this->storeManager->getStore()->getId();
             $sender = $this->config->getEmailSender((int) $storeId);
@@ -48,10 +52,13 @@ class Sender
                 ->sendMessage();
         } catch (\Exception $e) {
             $this->logger->error('Withdrawal customer email error: ' . $e->getMessage());
+            if ($rethrowExceptions) {
+                throw $e;
+            }
         }
     }
 
-    public function sendAdminEmail(array $templateVars): void
+    public function sendAdminEmail(array $templateVars, bool $rethrowExceptions = false): void
     {
         try {
             $storeId = $this->storeManager->getStore()->getId();
@@ -76,6 +83,9 @@ class Sender
                 ->sendMessage();
         } catch (\Exception $e) {
             $this->logger->error('Withdrawal admin email error: ' . $e->getMessage());
+            if ($rethrowExceptions) {
+                throw $e;
+            }
         }
     }
 

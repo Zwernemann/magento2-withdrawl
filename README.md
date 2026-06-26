@@ -108,16 +108,6 @@ This module adds the required Hyvä frontend integration for the withdrawal butt
 
 The base module remains required.
 
-### REST API
-
-Withdrawal entries can also be retrieved programmatically:
-
-```
-GET /rest/V1/zwernemann/withdrawals`
-```
-
-Access is protected by ACL permission (`Zwernemann_Withdrawal::withdrawals`).
-
 ### Multilingualism
 
 Completely translated into all 24 languages of the EU (97 strings). Further languages can be added via custom CSV files.
@@ -196,7 +186,9 @@ php bin/magento cache:flush
 5. Adjust **Withdrawal Period** if the legal period differs
 6. Set **Allow Partial Withdrawal** to *Yes* if customers should be able to withdraw individual items
 7. Configure email sender and templates if necessary
-8. Save and flush cache
+8. Set **Enable REST API** to *Yes* if you use the public API endpoints
+9. Configure further **REST API** settings if needed (order status, rate limiting)
+10. Save and flush cache
 
 ### Linking the Guest Order Form
 
@@ -213,6 +205,97 @@ Include this link, for example:
 - On your withdrawal policy page
 
 With Magento URL rewrites, you can adjust the address as desired, for example to `/withdrawal`.
+
+---
+
+## REST API
+
+The module exposes REST endpoints for headless storefronts, custom forms, and integrations. **The public API is disabled by default** and must be explicitly enabled under **Withdrawal Settings > REST API > Enable REST API**. When disabled, the `can-withdraw` and `confirmation` endpoints respond with **HTTP 404** so they do not appear to exist.
+
+Use a **valid store code** in the URL (e.g. `default`, `all`, or your store view code). An invalid store code returns *"Specified request cannot be processed."*
+
+Base URL pattern:
+
+```
+https://www.your-shop.com/rest/<store_code>/V1/...
+```
+
+### Check withdrawal eligibility
+
+Checks whether an order can be withdrawn. Returns only `true` or `false` — no order data is exposed.
+
+```
+POST /rest/<store_code>/V1/withdrawal/can-withdraw
+Content-Type: application/json
+
+{"email":"customer@example.com","orderNumber":"000000123"}
+```
+
+Response: `true` or `false`
+
+Returns `false` when:
+
+- The order number or email is missing or does not match
+- The module is disabled
+- The order status is not allowed
+- The withdrawal period has expired (counted from the last shipment date)
+- A withdrawal request already exists for this order
+
+### Submit withdrawal confirmation
+
+Registers a full-order withdrawal, sends customer and admin notification emails, and adds an entry to the admin withdrawal grid.
+
+```
+POST /rest/<store_code>/V1/withdrawal/confirmation
+Content-Type: application/json
+
+{"email":"customer@example.com","orderNumber":"000000123"}
+```
+
+Response: `true` on success
+
+On success, the module:
+
+1. Sends the customer confirmation email and admin notification
+2. Creates a withdrawal record with all visible order items
+3. Adds a comment to the order history
+4. Optionally updates the order status (see configuration below)
+
+If email delivery fails, nothing is persisted and the request can be retried.
+
+Possible errors:
+
+- API not enabled (HTTP 404)
+- Order not found or not eligible (same rules as `can-withdraw`)
+- Withdrawal already exists for this order
+- Email delivery failure
+
+No authentication token is required for these two endpoints.
+
+### List withdrawals (admin)
+
+Returns all withdrawal records. Requires an admin integration token and the `Zwernemann_Withdrawal::withdrawals` ACL permission.
+
+```
+GET /rest/<store_code>/V1/zwernemann/withdrawals
+Authorization: Bearer <admin_token>
+```
+
+### API configuration
+
+Under **Stores > Configuration > Sales > Withdrawal Settings > REST API**:
+
+| Setting | Description |
+|---|---|
+| Enable REST API | **Default: No.** Must be set to Yes before the public endpoints accept requests. When No, endpoints return HTTP 404. |
+| Order Status after API Confirmation | Optional. Sets the order status when a withdrawal is submitted via the API. Leave empty to keep the current status. |
+| Enable API Rate Limiting | Second line of defence when the API is enabled. Limits requests per client (IP) per time window. Requires Redis in `app/etc/env.php` under `backpressure/logger`. |
+| Rate Limit | Maximum requests per client per period (default: 10). |
+| Rate Limit Period | Time window in seconds (default: 60). |
+
+When rate limiting is enabled and the limit is exceeded, the API returns **HTTP 429 Too Many Requests**.
+
+Eligibility for the public endpoints follows the same rules as the storefront: allowed order statuses, withdrawal period from the last shipment, and module enabled state.
 
 ---
 
@@ -325,7 +408,6 @@ The database tables `zwernemann_withdrawal` and `zwernemann_withdrawal_items` re
 
 ## Planned
 
-- Extend REST API to include write access
 - Individual withdrawal periods per product (via product attributes)
 
 ---

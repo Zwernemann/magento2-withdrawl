@@ -7,4 +7,16 @@
             <resource ref="Zwernemann_Withdrawal::withdrawals"/>
         </resources>
     </route>
+    <route method="POST" url="/V1/withdrawal/confirmation">
+        <service class="Zwernemann\Withdrawal\Api\WithdrawalConfirmationInterface" method="sendConfirmation"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
+    <route method="POST" url="/V1/withdrawal/can-withdraw">
+        <service class="Zwernemann\Withdrawal\Api\WithdrawalConfirmationInterface" method="canWithdraw"/>
+        <resources>
+            <resource ref="anonymous"/>
+        </resources>
+    </route>
 </routes>
