@@ -4,6 +4,7 @@
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
         <title>Withdrawal for Order</title>
+        <css src="Zwernemann_Withdrawal::css/withdrawal.css"/>
     </head>
     <body>
         <referenceContainer name="content">
