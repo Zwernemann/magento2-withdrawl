@@ -235,7 +235,7 @@ Die Datenbanktabellen `zwernemann_withdrawal` und `zwernemann_withdrawal_items` 
 
 ## Versionshistorie
 
-### 1.8.1
+### 1.8.2
 
 - Theme-unabhängige Button-Darstellung umgesetzt
 - Widerrufsmöglichkeit für offene Bestellungen korrigiert
