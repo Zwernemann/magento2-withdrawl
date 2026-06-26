@@ -35,9 +35,7 @@ class Sender
             $sender = $this->config->getEmailSender((int) $storeId);
             $templateId = $this->config->getCustomerEmailTemplate((int) $storeId);
 
-            $adminEmail = $this->getAdminEmail((int) $storeId);
-
-            $transport = $this->transportBuilder
+            $this->transportBuilder
                 ->setTemplateIdentifier($templateId)
                 ->setTemplateOptions([
                     'area' => Area::AREA_FRONTEND,
@@ -45,13 +43,9 @@ class Sender
                 ])
                 ->setTemplateVars($templateVars)
                 ->setFromByScope($sender, $storeId)
-                ->addTo($customerEmail, $customerName);
-
-            if ($adminEmail) {
-                $transport->addBcc($adminEmail);
-            }
-
-            $transport->getTransport()->sendMessage();
+                ->addTo($customerEmail, $customerName)
+                ->getTransport()
+                ->sendMessage();
         } catch (\Exception $e) {
             $this->logger->error('Withdrawal customer email error: ' . $e->getMessage());
         }
