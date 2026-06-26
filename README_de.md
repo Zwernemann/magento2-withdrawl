@@ -81,7 +81,7 @@ Sobald ein Widerruf eingeht, werden zwei E-Mails verschickt:
 1. **An den Kunden** -- Bestaetigung mit Bestelldetails
 2. **An Sie** -- Benachrichtigung mit allen relevanten Daten
 
-Zusätzlich erhalten Sie eine BCC-Kopie der Kundenmail. Die E-Mail-Vorlagen lassen sich im Admin anpassen.
+Die E-Mail-Vorlagen lassen sich im Admin anpassen.
 
 **Vermerk in der Bestellung**
 
