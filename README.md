@@ -186,8 +186,9 @@ php bin/magento cache:flush
 5. Adjust **Withdrawal Period** if the legal period differs
 6. Set **Allow Partial Withdrawal** to *Yes* if customers should be able to withdraw individual items
 7. Configure email sender and templates if necessary
-8. Configure **REST API** settings if you use the API endpoints (order status, rate limiting)
-9. Save and flush cache
+8. Set **Enable REST API** to *Yes* if you use the public API endpoints
+9. Configure further **REST API** settings if needed (order status, rate limiting)
+10. Save and flush cache
 
 ### Linking the Guest Order Form
 
@@ -209,7 +210,9 @@ With Magento URL rewrites, you can adjust the address as desired, for example to
 
 ## REST API
 
-The module exposes REST endpoints for headless storefronts, custom forms, and integrations. Use a **valid store code** in the URL (e.g. `default`, `all`, or your store view code). An invalid store code returns *"Specified request cannot be processed."*
+The module exposes REST endpoints for headless storefronts, custom forms, and integrations. **The public API is disabled by default** and must be explicitly enabled under **Withdrawal Settings > REST API > Enable REST API**. When disabled, the `can-withdraw` and `confirmation` endpoints respond with **HTTP 404** so they do not appear to exist.
+
+Use a **valid store code** in the URL (e.g. `default`, `all`, or your store view code). An invalid store code returns *"Specified request cannot be processed."*
 
 Base URL pattern:
 
@@ -253,13 +256,16 @@ Response: `true` on success
 
 On success, the module:
 
-1. Creates a withdrawal record with all visible order items
-2. Sends the customer confirmation email and admin notification
+1. Sends the customer confirmation email and admin notification
+2. Creates a withdrawal record with all visible order items
 3. Adds a comment to the order history
 4. Optionally updates the order status (see configuration below)
 
+If email delivery fails, nothing is persisted and the request can be retried.
+
 Possible errors:
 
+- API not enabled (HTTP 404)
 - Order not found or not eligible (same rules as `can-withdraw`)
 - Withdrawal already exists for this order
 - Email delivery failure
@@ -281,8 +287,9 @@ Under **Stores > Configuration > Sales > Withdrawal Settings > REST API**:
 
 | Setting | Description |
 |---|---|
+| Enable REST API | **Default: No.** Must be set to Yes before the public endpoints accept requests. When No, endpoints return HTTP 404. |
 | Order Status after API Confirmation | Optional. Sets the order status when a withdrawal is submitted via the API. Leave empty to keep the current status. |
-| Enable API Rate Limiting | Limits how many API requests each client (IP) can make per time window. Requires Redis in `app/etc/env.php` under `backpressure/logger`. |
+| Enable API Rate Limiting | Second line of defence when the API is enabled. Limits requests per client (IP) per time window. Requires Redis in `app/etc/env.php` under `backpressure/logger`. |
 | Rate Limit | Maximum requests per client per period (default: 10). |
 | Rate Limit Period | Time window in seconds (default: 60). |
 
