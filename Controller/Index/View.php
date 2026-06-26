@@ -8,6 +8,7 @@ use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\Message\ManagerInterface;
+use Magento\Framework\Session\Generic as Session;
 use Magento\Framework\View\Result\PageFactory;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Zwernemann\Withdrawal\Helper\Config;
@@ -21,6 +22,7 @@ class View implements HttpGetActionInterface
     private $messageManager;
     private $orderRepository;
     private $customerSession;
+    private $session;
     private $config;
     private $withdrawalRepository;
 
@@ -31,6 +33,7 @@ class View implements HttpGetActionInterface
         ManagerInterface $messageManager,
         OrderRepositoryInterface $orderRepository,
         CustomerSession $customerSession,
+        Session $session,
         Config $config,
         WithdrawalRepository $withdrawalRepository
     ) {
@@ -40,6 +43,7 @@ class View implements HttpGetActionInterface
         $this->messageManager = $messageManager;
         $this->orderRepository = $orderRepository;
         $this->customerSession = $customerSession;
+        $this->session = $session;
         $this->config = $config;
         $this->withdrawalRepository = $withdrawalRepository;
     }
@@ -63,6 +67,8 @@ class View implements HttpGetActionInterface
             $redirect = $this->redirectFactory->create();
             return $redirect->setPath('customer/account/login');
         }
+
+        $this->session->unsGuestWithdrawalEmail();
 
         try {
             $order = $this->orderRepository->get($orderId);
