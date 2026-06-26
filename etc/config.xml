@@ -14,6 +14,7 @@
                 <admin_template>zwernemann_withdrawal_email_admin_template</admin_template>
             </email>
             <api>
+                <enabled>0</enabled>
                 <backpressure_enabled>0</backpressure_enabled>
                 <backpressure_limit>10</backpressure_limit>
                 <backpressure_period>60</backpressure_period>

@@ -14,6 +14,7 @@ class WithdrawalLimitConfigManager implements LimitConfigManagerInterface
 {
     public const REQUEST_TYPE_ID = 'withdrawal-api';
 
+    private const XML_PATH_API_ENABLED = 'zwernemann_withdrawal/api/enabled';
     private const XML_PATH_ENABLED = 'zwernemann_withdrawal/api/backpressure_enabled';
     private const XML_PATH_LIMIT = 'zwernemann_withdrawal/api/backpressure_limit';
     private const XML_PATH_PERIOD = 'zwernemann_withdrawal/api/backpressure_period';
@@ -35,6 +36,10 @@ class WithdrawalLimitConfigManager implements LimitConfigManagerInterface
 
     public function isEnforcementEnabled(): bool
     {
+        if (!$this->config->isSetFlag(self::XML_PATH_API_ENABLED, ScopeInterface::SCOPE_STORE)) {
+            return false;
+        }
+
         return $this->config->isSetFlag(self::XML_PATH_ENABLED, ScopeInterface::SCOPE_STORE);
     }
 }

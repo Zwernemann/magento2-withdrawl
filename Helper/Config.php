@@ -18,6 +18,7 @@ class Config extends AbstractHelper
     const XML_PATH_ALLOWED_ORDER_STATUSES = 'zwernemann_withdrawal/general/allowed_order_statuses';
     const XML_PATH_ALLOW_PARTIAL_WITHDRAWAL = 'zwernemann_withdrawal/general/allow_partial_withdrawal';
     const XML_PATH_API_ORDER_STATUS = 'zwernemann_withdrawal/api/order_status';
+    const XML_PATH_API_ENABLED = 'zwernemann_withdrawal/api/enabled';
 
     private ShipmentCollectionFactory $shipmentCollectionFactory;
 
@@ -110,6 +111,15 @@ class Config extends AbstractHelper
     {
         return (string) $this->scopeConfig->getValue(
             self::XML_PATH_API_ORDER_STATUS,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+    }
+
+    public function isApiEnabled($storeId = null): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::XML_PATH_API_ENABLED,
             ScopeInterface::SCOPE_STORE,
             $storeId
         );

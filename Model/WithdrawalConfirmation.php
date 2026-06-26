@@ -31,6 +31,8 @@ class WithdrawalConfirmation implements WithdrawalConfirmationInterface
 
     public function sendConfirmation(string $email, string $orderNumber): bool
     {
+        $this->assertApiEnabled();
+
         $orderNumber = trim($orderNumber);
         if ($orderNumber === '') {
             throw new NoSuchEntityException(__('Order number is required.'));
@@ -113,6 +115,8 @@ class WithdrawalConfirmation implements WithdrawalConfirmationInterface
 
     public function canWithdraw(string $email, string $orderNumber): bool
     {
+        $this->assertApiEnabled();
+
         $orderNumber = trim($orderNumber);
         if ($orderNumber === '' || trim($email) === '') {
             return false;
@@ -124,6 +128,13 @@ class WithdrawalConfirmation implements WithdrawalConfirmationInterface
         }
 
         return !$this->withdrawalRepository->hasWithdrawal((int) $order->getEntityId());
+    }
+
+    private function assertApiEnabled(): void
+    {
+        if (!$this->config->isApiEnabled()) {
+            throw new NoSuchEntityException(__('Request does not match any route.'));
+        }
     }
 
     private function getEligibleOrder(string $orderNumber, string $email): ?OrderInterface
