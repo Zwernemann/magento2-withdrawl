@@ -80,7 +80,7 @@ Soon as a withdrawal is received, two emails are sent:
 1. **To the customer** ₓ Confirmation with order details
 2. **To you** – Notification with all relevant data
 
-In addition, you receive a BCC copy of the customer email. The email templates can be customized in the admin panel.
+The email templates can be customized in the admin panel.
 
 **Note in the order**
 
