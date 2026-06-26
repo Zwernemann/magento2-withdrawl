@@ -235,6 +235,14 @@ Die Datenbanktabellen `zwernemann_withdrawal` und `zwernemann_withdrawal_items` 
 
 ## Versionshistorie
 
+### 1.8.1
+
+- Theme-unabhängige Button-Darstellung umgesetzt
+- Widerrufsmöglichkeit für offene Bestellungen korrigiert
+- Session-Problem bei Gast- und Kundenwiderrufen behoben
+- CSS-Ladevorgang auf relevante Seiten beschränkt
+- Doppelte E-Mail-Benachrichtigungen entfernt
+ 
 ### 1.8.0
 
 - Admin: In der Bestellhistorie wird jetzt ein Kommentar hinterlegt, wenn ein Widerruf bestätigt oder abgelehnt wird
