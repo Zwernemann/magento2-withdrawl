@@ -316,6 +316,9 @@ The database tables `zwernemann_withdrawal` and `zwernemann_withdrawal_items` re
 
 ## Version History
 
+### 1.9.0
+- Added  REST endpoints for headless storefronts, custom forms, and integrations
+  
 ### 1.8.2
 - Removed theme-specific CSS overrides and rely on native Magento button styling
 - Fixed withdrawal checks for unshipped orders in pending payment state
