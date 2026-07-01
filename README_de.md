@@ -235,6 +235,10 @@ Die Datenbanktabellen `zwernemann_withdrawal` und `zwernemann_withdrawal_items` 
 
 ## Versionshistorie
 
+### 1.9.0
+
+- Added  REST endpoints for headless storefronts, custom forms, and integrations
+
 ### 1.8.2
 
 - Theme-unabhängige Button-Darstellung umgesetzt
