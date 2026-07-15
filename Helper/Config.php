@@ -149,7 +149,7 @@ class Config extends AbstractHelper
     
         // Not yet shipped → always allowed (goods not received).
         $shipmentDate = $this->getLatestShipmentDate($order);
-        if ($shipmentDate === null) {
+        if (!$order->getIsVirtual() && $shipmentDate === null) {
             return true;
         }
     
