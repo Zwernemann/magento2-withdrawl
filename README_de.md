@@ -334,14 +334,6 @@ Die Datenbanktabellen `zwernemann_withdrawal` und `zwernemann_withdrawal_items` 
 
 ---
 
-## Geplant
-
-- REST API um Schreibzugriffe erweitern
-- Individuelle Widerrufsfristen pro Produkt (ueber Produktattribute)
-
-
----
-
 ## Kontakt & Support
 
 **Zwernemann Medienentwicklung**\
