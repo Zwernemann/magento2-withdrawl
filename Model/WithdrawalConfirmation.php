@@ -7,6 +7,8 @@ use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Stdlib\DateTime\DateTime;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use Magento\Store\Model\ScopeInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\ResourceModel\Order\Status\CollectionFactory as OrderStatusCollectionFactory;
@@ -25,7 +27,8 @@ class WithdrawalConfirmation implements WithdrawalConfirmationInterface
         private readonly EmailSender $emailSender,
         private readonly DateTime $dateTime,
         private readonly OrderStatusCollectionFactory $orderStatusCollectionFactory,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
+        private readonly TimezoneInterface $timezone
     ) {
     }
 
@@ -61,12 +64,23 @@ class WithdrawalConfirmation implements WithdrawalConfirmationInterface
             );
         }
 
+        // Exact submission date and time in the store timezone, including the
+        // timezone, so the acknowledgement email satisfies Art. 11a(4) of
+        // Directive 2011/83/EU (as amended by Directive (EU) 2023/2673).
+        $withdrawalDate = $this->timezone->formatDateTime(
+            new \DateTime('now', new \DateTimeZone('UTC')),
+            \IntlDateFormatter::LONG,
+            \IntlDateFormatter::LONG,
+            null,
+            $this->timezone->getConfigTimezone(ScopeInterface::SCOPE_STORE, $storeId)
+        );
+
         $templateVars = [
             'order_increment_id' => $order->getIncrementId(),
             'customer_name' => $customerName,
             'customer_email' => $order->getCustomerEmail(),
             'order_date' => $order->getCreatedAt(),
-            'withdrawal_date' => $this->dateTime->gmtDate(),
+            'withdrawal_date' => $withdrawalDate,
             'withdrawal_type_label' => (string) __('withdrawal'),
             'withdrawn_items' => implode("\n", $itemLines),
         ];

@@ -143,10 +143,10 @@ $partialAllowed = $block->isPartialWithdrawalAllowed();
                                         </td>
                                         <?php endif; ?>
                                         <td class="col price" data-th="<?= $block->escapeHtmlAttr(__('Price')) ?>">
-                                            <?= /* @noEscape */ $order->formatPrice($item->getPrice()) ?>
+                                            <?= /* @noEscape */ $order->formatPrice($block->getItemDisplayPrice($item)) ?>
                                         </td>
                                         <td class="col subtotal" data-th="<?= $block->escapeHtmlAttr(__('Subtotal')) ?>">
-                                            <?= /* @noEscape */ $order->formatPrice($item->getRowTotal()) ?>
+                                            <?= /* @noEscape */ $order->formatPrice($block->getItemDisplayRowTotal($item)) ?>
                                         </td>
                                     </tr>
                                     <?php endforeach; ?>

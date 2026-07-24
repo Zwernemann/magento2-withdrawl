@@ -409,12 +409,6 @@ The database tables `zwernemann_withdrawal` and `zwernemann_withdrawal_items` re
 
 ---
 
-## Planned
-
-- Individual withdrawal periods per product (via product attributes)
-
----
-
 ## Contact & Support
 
 **Zwernemann Medienentwicklung**\

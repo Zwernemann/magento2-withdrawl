@@ -9,6 +9,8 @@ use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Framework\App\RequestInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Sales\Api\Data\OrderItemInterface;
+use Magento\Tax\Model\Config as TaxConfig;
 use Zwernemann\Withdrawal\Helper\Config;
 use Zwernemann\Withdrawal\Model\WithdrawalRepository;
 
@@ -20,6 +22,7 @@ class View extends Template
     private $withdrawalRepository;
     private $session;
     private $customerSession;
+    private $taxConfig;
     private $order;
 
     /** @var int[]|null */
@@ -33,6 +36,7 @@ class View extends Template
         WithdrawalRepository $withdrawalRepository,
         Session $session,
         CustomerSession $customerSession,
+        TaxConfig $taxConfig,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -42,6 +46,7 @@ class View extends Template
         $this->withdrawalRepository = $withdrawalRepository;
         $this->session = $session;
         $this->customerSession = $customerSession;
+        $this->taxConfig = $taxConfig;
     }
 
     public function getOrder()
@@ -159,6 +164,49 @@ class View extends Template
     public function getGuestEmail(): string
     {
         return (string) $this->session->getGuestWithdrawalEmail();
+    }
+
+    /**
+     * Unit price to display for an order item, matching the store's tax
+     * display configuration (gross for typical B2C shops, net for B2B).
+     *
+     * @param OrderItemInterface $item
+     * @return float
+     */
+    public function getItemDisplayPrice($item): float
+    {
+        return $this->displayPricesInclTax()
+            ? (float) $item->getPriceInclTax()
+            : (float) $item->getPrice();
+    }
+
+    /**
+     * Row total to display for an order item, matching the store's tax
+     * display configuration (gross for typical B2C shops, net for B2B).
+     *
+     * @param OrderItemInterface $item
+     * @return float
+     */
+    public function getItemDisplayRowTotal($item): float
+    {
+        return $this->displayPricesInclTax()
+            ? (float) $item->getRowTotalInclTax()
+            : (float) $item->getRowTotal();
+    }
+
+    /**
+     * Whether sales prices should be shown incl. tax, based on the store's
+     * "Orders, Invoices, Credit Memos Display Settings" (tax/sales_display).
+     * "Including" and "Both" are treated as gross so the customer sees the
+     * amount actually paid.
+     */
+    private function displayPricesInclTax(): bool
+    {
+        $order = $this->getOrder();
+        $store = $order ? $order->getStoreId() : null;
+
+        return $this->taxConfig->displaySalesPriceInclTax($store)
+            || $this->taxConfig->displaySalesBothPrices($store);
     }
 
     public function getFormattedDate(string $date): string

@@ -146,18 +146,21 @@ class Config extends AbstractHelper
         if (!$this->isEnabled()) {
             return false;
         }
-    
-        // Not yet shipped → always allowed (goods not received).
-        $shipmentDate = $this->getLatestShipmentDate($order);
-        if (!$order->getIsVirtual() && $shipmentDate === null) {
-            return true;
-        }
-    
+
+        // The order status must be in the allowed list (when configured).
+        // This has to be checked regardless of shipment state, otherwise
+        // unshipped orders (e.g. "Nová objednávka") would bypass the filter.
         $allowedStatuses = $this->getAllowedOrderStatuses();
         if (!empty($allowedStatuses) && !in_array($order->getStatus(), $allowedStatuses, true)) {
             return false;
         }
-    
+
+        // Not yet shipped → within period (goods not received / clock not started).
+        $shipmentDate = $this->getLatestShipmentDate($order);
+        if ($shipmentDate === null) {
+            return true;
+        }
+
         $now = new \DateTime();
         return (int) $now->diff($shipmentDate)->days <= $this->getWithdrawalPeriodDays();
     }
