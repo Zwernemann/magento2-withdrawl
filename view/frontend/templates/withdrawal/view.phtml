@@ -44,6 +44,12 @@ $partialAllowed = $block->isPartialWithdrawalAllowed();
                 <?php if ($block->hasExistingWithdrawal()): ?>
                     <div class="message info">
                         <span><?= $block->escapeHtml(__('All items of this order have already been withdrawn.')) ?></span>
+                        <?php $statusLabel = $block->getWithdrawalStatusLabel(); ?>
+                        <?php if ($statusLabel !== null): ?>
+                            <br/>
+                            <strong><?= $block->escapeHtml(__('Withdrawal')) ?>:</strong>
+                            <?= $block->escapeHtml($statusLabel) ?>
+                        <?php endif; ?>
                     </div>
                 <?php elseif ($block->isWithdrawalAllowed()): ?>
                     <?php $deadline = $block->getWithdrawalDeadline(); ?>
