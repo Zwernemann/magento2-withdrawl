@@ -316,6 +316,13 @@ The database tables `zwernemann_withdrawal` and `zwernemann_withdrawal_items` re
 
 ## Version History
 
+### 1.9.1
+- New: customers can now see the status of their withdrawal (Pending / Confirmed / Rejected) in the order history, on the order view page, and on the withdrawal page, with a link to the withdrawal page (#57)
+- Fix: withdrawal form line items now show gross prices (incl. VAT) according to the store's tax display setting instead of net prices (#64)
+- Fix: the "Allowed Order Statuses" filter is now also enforced for orders that have not been shipped yet (previously they could bypass it) (#63)
+- Fix: virtual orders are now handled correctly in the withdrawal eligibility check
+- Fix: the withdrawal confirmation email now shows the exact submission date and time in the store timezone, as required by Art. 11a(4) of Directive 2011/83/EU (#61)
+
 ### 1.9.0
 - Added  REST endpoints for headless storefronts, custom forms, and integrations
   
