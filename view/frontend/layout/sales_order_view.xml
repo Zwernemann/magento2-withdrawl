@@ -6,7 +6,7 @@
     </head>
     <body>
         <referenceBlock name="sales.order.info.buttons">
-            <block class="Magento\Framework\View\Element\Template"
+            <block class="Zwernemann\Withdrawal\Block\Order\WithdrawalButton"
                    name="zwernemann.withdrawal.button"
                    template="Zwernemann_Withdrawal::button.phtml"/>
         </referenceBlock>
