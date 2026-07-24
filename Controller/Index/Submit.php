@@ -9,6 +9,8 @@ use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Framework\Stdlib\DateTime\DateTime;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
+use Magento\Store\Model\ScopeInterface;
 use Magento\Customer\Model\Session as CustomerSession;
 use Zwernemann\Withdrawal\Helper\Config;
 use Zwernemann\Withdrawal\Model\WithdrawalRepository;
@@ -29,6 +31,7 @@ class Submit implements HttpPostActionInterface
     private $emailSender;
     private $resource;
     private $formKeyValidator;
+    private $timezone;
 
     public function __construct(
         RequestInterface $request,
@@ -41,7 +44,8 @@ class Submit implements HttpPostActionInterface
         WithdrawalRepository $withdrawalRepository,
         EmailSender $emailSender,
         ResourceConnection $resource,
-        FormKeyValidator $formKeyValidator
+        FormKeyValidator $formKeyValidator,
+        TimezoneInterface $timezone
     ) {
         $this->request = $request;
         $this->redirectFactory = $redirectFactory;
@@ -54,6 +58,7 @@ class Submit implements HttpPostActionInterface
         $this->emailSender = $emailSender;
         $this->resource = $resource;
         $this->formKeyValidator = $formKeyValidator;
+        $this->timezone = $timezone;
     }
 
     public function execute()
@@ -234,12 +239,23 @@ class Submit implements HttpPostActionInterface
                 $itemLines[] = sprintf('%s (SKU: %s) x %s', $savedItem['name'], $savedItem['sku'], (int) $savedItem['qty']);
             }
 
+            // Exact submission date and time in the store timezone, including the
+            // timezone, so the acknowledgement email satisfies Art. 11a(4) of
+            // Directive 2011/83/EU (as amended by Directive (EU) 2023/2673).
+            $withdrawalDate = $this->timezone->formatDateTime(
+                new \DateTime('now', new \DateTimeZone('UTC')),
+                \IntlDateFormatter::LONG,
+                \IntlDateFormatter::LONG,
+                null,
+                $this->timezone->getConfigTimezone(ScopeInterface::SCOPE_STORE, $order->getStoreId())
+            );
+
             $templateVars = [
                 'order_increment_id'    => $order->getIncrementId(),
                 'customer_name'         => $customerName,
                 'customer_email'        => $order->getCustomerEmail(),
                 'order_date'            => $order->getCreatedAt(),
-                'withdrawal_date'       => $this->dateTime->gmtDate(),
+                'withdrawal_date'       => $withdrawalDate,
                 'withdrawal_type_label' => $isPartial
                     ? (string) __('partial withdrawal')
                     : (string) __('withdrawal'),
