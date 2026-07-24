@@ -17,6 +17,22 @@
     color: #95a5a6;
 }
 
+/* Withdrawal status states (order history column and order view button) */
+.withdrawal-status-pending {
+    color: #e67e22;
+    font-weight: 600;
+}
+
+.withdrawal-status-confirmed {
+    color: #27ae60;
+    font-weight: 600;
+}
+
+.withdrawal-status-rejected {
+    color: #c0392b;
+    font-weight: 600;
+}
+
 /* Withdrawal View Page */
 .withdrawal-view-container .table-order-details th {
     text-align: left;
