@@ -155,14 +155,21 @@ class Config extends AbstractHelper
             return false;
         }
 
-        // Not yet shipped → within period (goods not received / clock not started).
+        // A physical order not yet shipped → allowed (goods not received, the
+        // withdrawal clock hasn't started). Virtual orders never ship, so they
+        // must not take this free pass.
         $shipmentDate = $this->getLatestShipmentDate($order);
-        if ($shipmentDate === null) {
+        if (!$order->getIsVirtual() && $shipmentDate === null) {
             return true;
         }
 
+        // Measure the withdrawal period against the shipment date; for virtual
+        // orders (no shipment) fall back to the order date, since delivery
+        // never occurs and the goods are received at purchase.
+        $referenceDate = $shipmentDate ?? new \DateTime($order->getCreatedAt());
+
         $now = new \DateTime();
-        return (int) $now->diff($shipmentDate)->days <= $this->getWithdrawalPeriodDays();
+        return (int) $now->diff($referenceDate)->days <= $this->getWithdrawalPeriodDays();
     }
 
     public function getWithdrawalDeadline(\Magento\Sales\Api\Data\OrderInterface $order): string
