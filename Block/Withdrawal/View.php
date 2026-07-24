@@ -146,6 +146,21 @@ class View extends Template
         return count($remaining) > 0;
     }
 
+    /**
+     * Customer-facing status label of the withdrawal for the current order,
+     * or null when no withdrawal exists yet.
+     */
+    public function getWithdrawalStatusLabel(): ?\Magento\Framework\Phrase
+    {
+        $order = $this->getOrder();
+        if (!$order) {
+            return null;
+        }
+
+        $withdrawal = $this->withdrawalRepository->getByOrderId((int) $order->getEntityId());
+        return $withdrawal ? $withdrawal->getStatusLabel() : null;
+    }
+
     public function getWithdrawalDeadline(): string
     {
         $order = $this->getOrder();
