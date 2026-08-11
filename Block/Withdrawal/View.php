@@ -220,8 +220,8 @@ class View extends Template
         $order = $this->getOrder();
         $store = $order ? $order->getStoreId() : null;
 
-        return $this->taxConfig->displaySalesPriceInclTax($store)
-            || $this->taxConfig->displaySalesBothPrices($store);
+        return $this->taxConfig->displaySalesPricesInclTax($store)
+            || $this->taxConfig->displaySalesPricesBoth($store);
     }
 
     public function getFormattedDate(string $date): string
