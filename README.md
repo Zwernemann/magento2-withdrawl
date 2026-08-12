@@ -314,7 +314,7 @@ The database tables `zwernemann_withdrawal` and `zwernemann_withdrawal_items` re
 
 ## Version History
 
-### 1.9.3
+### 1.9.4
 - Minor fixes and improvements
   
 ### 1.9.3
