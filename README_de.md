@@ -348,6 +348,16 @@ Die Datenbanktabellen `zwernemann_withdrawal` und `zwernemann_withdrawal_items` 
 
 ---
 
+## Weitere Magento-2-Erweiterungen 
+
+### Zwernemann_Chat – KI-Chat für Magento 2
+
+Kostenloser und quelloffener KI-Assistent für Magento 2. Semantische Produktsuche, Kundenkontext und optionale Commerce-Funktionen wie Warenkorb, Nachbestellungen und Bestellabschluss. 
+
+[Zum KI Chat-Modul](https://github.com/Zwernemann/magento2-chat/)
+
+---
+
 ## Kontakt & Support
 
 **Zwernemann Medienentwicklung**\
