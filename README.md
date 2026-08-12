@@ -422,6 +422,16 @@ The database tables `zwernemann_withdrawal` and `zwernemann_withdrawal_items` re
 
 ---
 
+## Other Magento 2 extensions 
+
+### Zwernemann_Chat – AI Chat for Magento 2 
+
+Free and open-source conversational AI for Magento 2. Semantic product search, customer context and optional commerce actions such as cart, reorder and checkout.  
+
+[To the AI Chat-Module](https://github.com/Zwernemann/magento2-chat/)
+
+---
+
 ## Contact & Support
 
 **Zwernemann Medienentwicklung**\
