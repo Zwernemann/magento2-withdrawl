@@ -233,6 +233,9 @@ Die Datenbanktabellen `zwernemann_withdrawal` und `zwernemann_withdrawal_items` 
 
 ## Versionshistorie
 
+### 1.9.4
+- Kleinere Korrekturen und Verbesserungen
+  
 ### 1.9.3
 - Die Hyvä-Theme-Kompatibilität ist jetzt direkt im Modul enthalten — das separate Paket `zwernemann/module-withdrawal-hyva` wird nicht mehr benötigt
 - Bei aktivem Hyvä-Theme nutzt das Widerrufs-Frontend automatisch Tailwind-CSS-/Alpine.js-Templates; Luma-Shops behalten die klassischen Templates
