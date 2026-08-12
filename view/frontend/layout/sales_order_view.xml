@@ -6,9 +6,10 @@
     </head>
     <body>
         <referenceBlock name="sales.order.info.buttons">
-            <block class="Zwernemann\Withdrawal\Block\Order\WithdrawalButton"
-                   name="zwernemann.withdrawal.button"
-                   template="Zwernemann_Withdrawal::button.phtml"/>
+          <block class="Magento\Framework\View\Element\Template"
+                 name="zwernemann.withdrawal.button"
+                 template="Zwernemann_Withdrawal::button.phtml"
+                 ifconfig="zwernemann_withdrawal/general/enabled"/>
         </referenceBlock>
     </body>
 </page>
