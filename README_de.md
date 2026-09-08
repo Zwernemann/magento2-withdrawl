@@ -34,6 +34,7 @@ Vor dem eigentlichen Widerruf sieht der Kunde eine Zusammenfassung seiner Bestel
 - Bestellnummer, Datum, Status, Gesamtbetrag
 - Alle bestellten Positionen mit Name, Artikelnummer, Menge und Preis
 - Bis wann der Widerruf moeglich ist (berechnet ab Versanddatum der letzten Lieferung)
+- Einen Hinweis, wie es nach dem Absenden weitergeht (im Backend anpassbar, siehe *Hinweistext zum Widerruf*)
 - Einen Button zum endgueltigen Absenden -- mit vorgeschalteter Sicherheitsabfrage
 
 **Teilwiderruf (optional)**
@@ -95,6 +96,7 @@ Im Admin unter *Stores > Configuration > Sales > Withdrawal Settings*:
 - Empfaenger-Adresse fuer Benachrichtigungen festlegen
 - Widerrufsfrist in Tagen einstellen, gezaehlt ab Versanddatum der letzten Lieferung (Standard: 14)
 - Teilwiderruf aktivieren oder deaktivieren (Standard: Nein)
+- Hinweistext im Widerrufsformular anpassen (*Hinweistext zum Widerruf*, leer = uebersetzter Standardtext)
 - E-Mail-Absender und Vorlagen waehlen
 
 ---
@@ -195,8 +197,9 @@ php bin/magento cache:flush
 4. **Benachrichtigungs-E-Mail** eintragen -- hierhin gehen die Widerrufs-Meldungen
 5. **Widerrufsfrist** anpassen, falls die gesetzliche Frist abweicht
 6. **Teilwiderruf erlauben** auf *Ja* setzen, wenn Kunden einzelne Artikel widerrufen duerfen sollen
-7. Bei Bedarf E-Mail-Absender und Vorlagen konfigurieren
-8. Speichern und Cache leeren
+7. **Hinweistext zum Widerruf** anpassen, falls die Standardformulierung nicht passt (leer lassen fuer den Standardtext)
+8. Bei Bedarf E-Mail-Absender und Vorlagen konfigurieren
+9. Speichern und Cache leeren
 
 ### Gastbestellungs-Formular verlinken
 
@@ -232,6 +235,12 @@ Die Datenbanktabellen `zwernemann_withdrawal` und `zwernemann_withdrawal_items` 
 ---
 
 ## Versionshistorie
+
+### 1.9.5
+- Korrigierter Hinweis bei noch nicht versandten Bestellungen: Er erweckt nicht mehr den Eindruck, der Widerruf ende mit dem Erhalt der Ware, sondern nennt den Erhalt der Ware als Beginn der Widerrufsfrist
+- Neuer Hinweis im Widerrufsformular: Der Kunde erhaelt eine automatische Eingangsbestaetigung, der Shop prueft den Widerruf und informiert anschliessend ueber das weitere Vorgehen
+- Neue Backend-Einstellung *Hinweistext zum Widerruf* (Stores > Configuration > Sales > Withdrawal Settings > General Settings), um diesen Hinweis je Store View zu ueberschreiben; bleibt das Feld leer, wird der uebersetzte Standardtext verwendet
+- Uebersetzungen der neuen und geaenderten Texte in allen 24 EU-Sprachen
 
 ### 1.9.4
 - Kleinere Korrekturen und Verbesserungen

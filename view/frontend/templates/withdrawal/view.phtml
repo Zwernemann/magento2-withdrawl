@@ -60,13 +60,14 @@ $partialAllowed = $block->isPartialWithdrawalAllowed();
                             <?= $block->escapeHtml($deadline) ?>
                         </p>
                         <?php else: ?>
-                        <p><?= $block->escapeHtml(__('This order has not been shipped yet. You may withdraw at any time until you receive the goods.')) ?></p>
+                        <p><?= $block->escapeHtml(__('This order has not been shipped yet. The withdrawal period starts once you have received the goods.')) ?></p>
                         <?php endif; ?>
                         <?php if ($partialAllowed): ?>
                         <p><?= $block->escapeHtml(__('Select the items you wish to withdraw. You may withdraw individual items (partial withdrawal) or all items at once.')) ?></p>
                         <?php else: ?>
                         <p><?= $block->escapeHtml(__('By submitting the withdrawal, you declare that you wish to revoke the purchase contract for this order.')) ?></p>
                         <?php endif; ?>
+                        <p class="withdrawal-notice"><?= /* @noEscape */ nl2br($block->escapeHtml($block->getWithdrawalNotice())) ?></p>
                     </div>
 
                     <form method="post" action="<?= $block->escapeUrl($block->getSubmitUrl()) ?>" id="withdrawal-form">
