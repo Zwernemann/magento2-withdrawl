@@ -32,8 +32,12 @@ class WithdrawalConfirmation implements WithdrawalConfirmationInterface
     ) {
     }
 
-    public function sendConfirmation(string $email, string $orderNumber): bool
-    {
+    public function sendConfirmation(
+        string $email,
+        string $orderNumber,
+        ?string $firstname = null,
+        ?string $lastname = null
+    ): bool {
         $this->assertApiEnabled();
 
         $orderNumber = trim($orderNumber);
@@ -53,6 +57,13 @@ class WithdrawalConfirmation implements WithdrawalConfirmationInterface
         $storeId = (int) $order->getStoreId();
         $customerName = $this->resolveCustomerName($order);
         $itemsToSave = $this->buildWithdrawalItems($order);
+
+        // Name declared by the withdrawing person. Optional here so existing API
+        // clients keep working; when it is sent, it is stored and reported the
+        // same way as a name entered on the withdrawal form.
+        $firstname = $firstname !== null ? trim($firstname) : '';
+        $lastname = $lastname !== null ? trim($lastname) : '';
+        $withdrawalName = trim($firstname . ' ' . $lastname);
 
         $itemLines = [];
         foreach ($itemsToSave as $savedItem) {
@@ -78,6 +89,7 @@ class WithdrawalConfirmation implements WithdrawalConfirmationInterface
         $templateVars = [
             'order_increment_id' => $order->getIncrementId(),
             'customer_name' => $customerName,
+            'withdrawal_name' => $withdrawalName,
             'customer_email' => $order->getCustomerEmail(),
             'order_date' => $order->getCreatedAt(),
             'withdrawal_date' => $withdrawalDate,
@@ -103,7 +115,13 @@ class WithdrawalConfirmation implements WithdrawalConfirmationInterface
             );
         }
 
-        $withdrawal = $this->withdrawalRepository->createFromOrder($order);
+        $withdrawal = $this->withdrawalRepository->createFromOrder(
+            $order,
+            false,
+            null,
+            $firstname !== '' ? $firstname : null,
+            $lastname !== '' ? $lastname : null
+        );
         $this->withdrawalRepository->saveWithdrawalItems((int) $withdrawal->getId(), $itemsToSave);
 
         $orderComment = __(
