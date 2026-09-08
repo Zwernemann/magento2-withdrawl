@@ -84,6 +84,12 @@
                 <label translate="true">Customer Name</label>
             </settings>
         </column>
+        <column name="withdrawal_lastname" sortOrder="35"
+                class="Zwernemann\Withdrawal\Ui\Component\Listing\Column\WithdrawalName">
+            <settings>
+                <label translate="true">Name on Withdrawal</label>
+            </settings>
+        </column>
         <column name="customer_email" sortOrder="40">
             <settings>
                 <filter>text</filter>
