@@ -11,6 +11,10 @@
                 comment="Customer Email"/>
         <column xsi:type="varchar" name="customer_name" length="255" nullable="true"
                 comment="Customer Name"/>
+        <column xsi:type="varchar" name="withdrawal_firstname" length="255" nullable="true"
+                comment="First Name Declared on the Withdrawal Form"/>
+        <column xsi:type="varchar" name="withdrawal_lastname" length="255" nullable="true"
+                comment="Last Name Declared on the Withdrawal Form"/>
         <column xsi:type="varchar" name="status" length="32" nullable="false" default="pending"
                 comment="Withdrawal Status"/>
         <column xsi:type="text" name="comment" nullable="true" comment="Comment"/>

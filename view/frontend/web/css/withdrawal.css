@@ -84,6 +84,20 @@
     font-size: 13px;
 }
 
+.withdrawal-name-fieldset {
+    margin-bottom: 20px;
+}
+
+.withdrawal-name-fieldset .withdrawal-name-note {
+    margin-bottom: 10px;
+    color: #666;
+    font-size: 13px;
+}
+
+.withdrawal-name-fieldset .input-text {
+    max-width: 320px;
+}
+
 .box.box-order-items {
     margin-bottom: 20px;
 }

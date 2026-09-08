@@ -105,6 +105,39 @@ if ($order) {
                                 <input type="hidden" name="guest_email" value="<?= $block->escapeHtmlAttr($block->getGuestEmail()) ?>"/>
                             <?php endif; ?>
 
+                            <h3 class="font-semibold mb-3"><?= $block->escapeHtml(__('Your Name')) ?></h3>
+                            <p class="mb-3 text-sm text-gray-600">
+                                <?= $block->escapeHtml(__('Please state the first and last name of the person withdrawing from the contract.')) ?>
+                            </p>
+                            <div class="grid gap-4 sm:grid-cols-2 mb-6">
+                                <div>
+                                    <label class="block text-sm font-medium mb-1" for="withdrawal-firstname">
+                                        <?= $block->escapeHtml(__('First Name')) ?> <span class="text-red-600">*</span>
+                                    </label>
+                                    <input type="text"
+                                           name="withdrawal_firstname"
+                                           id="withdrawal-firstname"
+                                           class="form-input w-full border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                           value="<?= $block->escapeHtmlAttr($block->getSuggestedFirstname()) ?>"
+                                           maxlength="255"
+                                           autocomplete="given-name"
+                                           required/>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-1" for="withdrawal-lastname">
+                                        <?= $block->escapeHtml(__('Last Name')) ?> <span class="text-red-600">*</span>
+                                    </label>
+                                    <input type="text"
+                                           name="withdrawal_lastname"
+                                           id="withdrawal-lastname"
+                                           class="form-input w-full border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                           value="<?= $block->escapeHtmlAttr($block->getSuggestedLastname()) ?>"
+                                           maxlength="255"
+                                           autocomplete="family-name"
+                                           required/>
+                                </div>
+                            </div>
+
                             <h3 class="font-semibold mb-3"><?= $block->escapeHtml(__('Select Items to Withdraw')) ?></h3>
                             <table class="w-full text-sm">
                                 <thead>
@@ -181,7 +214,7 @@ if ($order) {
 
                             <div class="flex flex-wrap gap-4 mt-6">
                                 <button type="button"
-                                        @click="showConfirm = true"
+                                        @click="if ($el.form.reportValidity()) showConfirm = true"
                                         :disabled="noneSelected"
                                         class="btn btn-primary disabled:opacity-50 disabled:cursor-not-allowed">
                                     <span><?= $block->escapeHtml(__('Submit Withdrawal')) ?></span>

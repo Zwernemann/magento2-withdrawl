@@ -2,6 +2,7 @@
 <!--@vars {
 "var order_increment_id":"Order Increment ID",
 "var customer_name":"Customer Name",
+"var withdrawal_name":"Name Declared on the Withdrawal Form",
 "var customer_email":"Customer Email",
 "var order_date":"Order Date",
 "var withdrawal_date":"Withdrawal Date",
@@ -31,6 +32,12 @@
                     <td><strong>{{trans "Customer Name:"}}</strong></td>
                     <td>{{var customer_name}}</td>
                 </tr>
+                {{depend withdrawal_name}}
+                <tr>
+                    <td><strong>{{trans "Name Provided by Customer:"}}</strong></td>
+                    <td>{{var withdrawal_name}}</td>
+                </tr>
+                {{/depend}}
                 <tr>
                     <td><strong>{{trans "Customer Email:"}}</strong></td>
                     <td>{{var customer_email}}</td>

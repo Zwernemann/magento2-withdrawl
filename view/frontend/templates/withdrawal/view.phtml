@@ -78,6 +78,45 @@ $partialAllowed = $block->isPartialWithdrawalAllowed();
                             <input type="hidden" name="guest_email" value="<?= $block->escapeHtmlAttr($block->getGuestEmail()) ?>"/>
                         <?php endif; ?>
 
+                        <fieldset class="fieldset info withdrawal-name-fieldset">
+                            <legend class="legend">
+                                <span><?= $block->escapeHtml(__('Your Name')) ?></span>
+                            </legend>
+                            <p class="withdrawal-name-note">
+                                <?= $block->escapeHtml(__('Please state the first and last name of the person withdrawing from the contract.')) ?>
+                            </p>
+                            <div class="field required">
+                                <label class="label" for="withdrawal-firstname">
+                                    <span><?= $block->escapeHtml(__('First Name')) ?></span>
+                                </label>
+                                <div class="control">
+                                    <input type="text"
+                                           name="withdrawal_firstname"
+                                           id="withdrawal-firstname"
+                                           class="input-text required-entry"
+                                           value="<?= $block->escapeHtmlAttr($block->getSuggestedFirstname()) ?>"
+                                           maxlength="255"
+                                           autocomplete="given-name"
+                                           required/>
+                                </div>
+                            </div>
+                            <div class="field required">
+                                <label class="label" for="withdrawal-lastname">
+                                    <span><?= $block->escapeHtml(__('Last Name')) ?></span>
+                                </label>
+                                <div class="control">
+                                    <input type="text"
+                                           name="withdrawal_lastname"
+                                           id="withdrawal-lastname"
+                                           class="input-text required-entry"
+                                           value="<?= $block->escapeHtmlAttr($block->getSuggestedLastname()) ?>"
+                                           maxlength="255"
+                                           autocomplete="family-name"
+                                           required/>
+                                </div>
+                            </div>
+                        </fieldset>
+
                         <div class="box box-order-items">
                             <strong class="box-title">
                                 <span><?= $block->escapeHtml(__('Select Items to Withdraw')) ?></span>

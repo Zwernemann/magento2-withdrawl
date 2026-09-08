@@ -34,7 +34,10 @@ Before the actual withdrawal, the customer sees a summary of their order:
 - All ordered items with name, SKU, quantity, and price
 - The deadline until which withdrawal is possible, calculated from the date of the last shipment
 - A notice about what happens after submission (editable in the backend, see *Withdrawal Notice Text*)
+- Mandatory input fields for first name and last name of the withdrawing person, prefilled with the name from the order
 - A button for final submission – with a preceding security confirmation
+
+The name is required by section 356a BGB (Art. 11a of Directive 2011/83/EU): the withdrawal function has to let the consumer state their name. It is stored with the withdrawal request but never used to look up the order, so a different spelling can never block a valid withdrawal.
 
 **Partial withdrawal (optional)**
 
@@ -56,7 +59,7 @@ After submission, the customer is redirected to a success page. This confirms th
 
 Under *Sales > Withdrawals*, you will find a tabular overview of all received withdrawals:
 
-- ID, order number, customer name, email
+- ID, order number, customer name, name stated on the withdrawal, email
 - Status (Pending / Confirmed / Rejected)
 - Type (Full / Partial)
 - Date of order and date of withdrawal
@@ -69,6 +72,7 @@ All columns can be filtered and sorted.
 Each row in the grid has a *View Details* action that opens a dedicated detail page. It shows:
 
 - All metadata: customer name and email, order number, withdrawal type, status, order date and withdrawal date
+- The name the customer stated on the withdrawal form, with a hint when it differs from the name on the order
 - Quick action buttons to confirm or reject the request directly on the page
 - A complete table of the withdrawn items including product name, SKU and quantity – clearly labelled as full or partial withdrawal
 
@@ -110,7 +114,7 @@ When a Hyvä theme is active, the withdrawal frontend (order view, order history
 
 ### Multilingualism
 
-Completely translated into all 24 languages of the EU (97 strings). Further languages can be added via custom CSV files.
+Completely translated into all 24 languages of the EU (150 strings). Further languages can be added via custom CSV files.
 
 ---
 
@@ -250,10 +254,12 @@ Registers a full-order withdrawal, sends customer and admin notification emails,
 POST /rest/<store_code>/V1/withdrawal/confirmation
 Content-Type: application/json
 
-{"email":"customer@example.com","orderNumber":"000000123"}
+{"email":"customer@example.com","orderNumber":"000000123","firstname":"Max","lastname":"Mustermann"}
 ```
 
 Response: `true` on success
+
+`firstname` and `lastname` are the name of the withdrawing person. Both are optional for compatibility with existing integrations, but a storefront that offers the withdrawal function should send them, since the consumer has to be able to state their name (section 356a BGB). They are stored with the withdrawal record and shown in the admin, and are never used to look up the order.
 
 On success, the module:
 
@@ -316,6 +322,15 @@ The database tables `zwernemann_withdrawal` and `zwernemann_withdrawal_items` re
 ---
 
 ## Version History
+
+### 1.9.6
+- The withdrawal form now asks for the first name and last name of the withdrawing person, as required by section 356a BGB (Art. 11a of Directive 2011/83/EU). Both fields are mandatory and prefilled with the name from the order
+- The name is stored with the withdrawal request and is never used to look up the order, so spelling variants cannot block a valid withdrawal
+- New grid column *Name on Withdrawal* and a new row on the withdrawal detail page, including a hint when the stated name differs from the name on the order
+- The customer and admin notification emails contain the stated name (`withdrawal_name` template variable)
+- The REST endpoint `withdrawal/confirmation` accepts the optional fields `firstname` and `lastname` and stores them with the record
+- New database columns `withdrawal_firstname` and `withdrawal_lastname` in `zwernemann_withdrawal`, so `bin/magento setup:upgrade` is required for this update
+- Validation errors on the withdrawal form now send guest customers back to the guest form instead of the login page
 
 ### 1.9.5
 - Corrected the notice for orders that have not been shipped yet: it no longer suggests that withdrawal ends when the goods arrive, but states that the withdrawal period starts on receipt of the goods

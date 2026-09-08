@@ -13,11 +13,18 @@ interface WithdrawalConfirmationInterface
      *
      * @param string $email Customer email (must match the order's customer email).
      * @param string $orderNumber Order increment ID.
+     * @param string|null $firstname First name of the withdrawing person, stored with the request.
+     * @param string|null $lastname Last name of the withdrawing person, stored with the request.
      * @return bool True on success.
      * @throws \Magento\Framework\Exception\NoSuchEntityException If order is not found.
      * @throws \Magento\Framework\Exception\LocalizedException On validation or processing failure.
      */
-    public function sendConfirmation(string $email, string $orderNumber): bool;
+    public function sendConfirmation(
+        string $email,
+        string $orderNumber,
+        ?string $firstname = null,
+        ?string $lastname = null
+    ): bool;
 
     /**
      * Check whether an order can be withdrawn (exists, email matches, and eligibility rules pass).

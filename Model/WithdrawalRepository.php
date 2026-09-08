@@ -52,7 +52,9 @@ class WithdrawalRepository implements WithdrawalRepositoryInterface
     public function createFromOrder(
         \Magento\Sales\Api\Data\OrderInterface $order,
         bool $isPartial = false,
-        ?string $comment = null
+        ?string $comment = null,
+        ?string $withdrawalFirstname = null,
+        ?string $withdrawalLastname = null
     ): Withdrawal {
         $customerName = trim($order->getCustomerFirstname() . ' ' . $order->getCustomerLastname());
         if ($customerName === '' && $order->getBillingAddress()) {
@@ -66,6 +68,12 @@ class WithdrawalRepository implements WithdrawalRepositoryInterface
             'order_increment_id' => $order->getIncrementId(),
             'customer_email' => $order->getCustomerEmail(),
             'customer_name' => $customerName,
+            'withdrawal_firstname' => $withdrawalFirstname !== null
+                ? mb_substr(trim($withdrawalFirstname), 0, 255)
+                : null,
+            'withdrawal_lastname' => $withdrawalLastname !== null
+                ? mb_substr(trim($withdrawalLastname), 0, 255)
+                : null,
             'status' => 'pending',
             'is_partial' => $isPartial ? 1 : 0,
             'order_created_at' => $order->getCreatedAt(),

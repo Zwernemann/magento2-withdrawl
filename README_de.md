@@ -35,7 +35,10 @@ Vor dem eigentlichen Widerruf sieht der Kunde eine Zusammenfassung seiner Bestel
 - Alle bestellten Positionen mit Name, Artikelnummer, Menge und Preis
 - Bis wann der Widerruf moeglich ist (berechnet ab Versanddatum der letzten Lieferung)
 - Einen Hinweis, wie es nach dem Absenden weitergeht (im Backend anpassbar, siehe *Hinweistext zum Widerruf*)
+- Pflichtfelder fuer Vor- und Nachnamen der widerrufenden Person, vorbelegt mit dem Namen aus der Bestellung
 - Einen Button zum endgueltigen Absenden -- mit vorgeschalteter Sicherheitsabfrage
+
+Die Namensangabe fordert Paragraf 356a BGB (Art. 11a der Richtlinie 2011/83/EU): Die Widerrufsfunktion muss es dem Verbraucher ermoeglichen, seinen Namen anzugeben. Der Name wird zum Widerruf gespeichert, aber nie zur Suche der Bestellung verwendet, damit eine abweichende Schreibweise einen berechtigten Widerruf nicht blockieren kann.
 
 **Teilwiderruf (optional)**
 
@@ -57,7 +60,7 @@ Nach dem Absenden wird der Kunde auf eine Erfolgsseite weitergeleitet. Dort wird
 
 Unter *Verkäufe > Withdrawals* finden Sie eine tabellarische Uebersicht saemtlicher eingegangener Widerrufe:
 
-- ID, Bestellnummer, Kundenname, E-Mail
+- ID, Bestellnummer, Kundenname, im Widerruf angegebener Name, E-Mail
 - Status (Ausstehend / Bestaetigt / Abgelehnt)
 - Typ (Vollwiderruf / Teilwiderruf)
 - Datum der Bestellung und Datum des Widerrufs
@@ -70,6 +73,7 @@ Alle Spalten sind filterbar und sortierbar.
 Jede Zeile im Grid hat eine *Details anzeigen*-Aktion, die eine dedizierte Detailseite öffnet. Dort werden angezeigt:
 
 - Alle Metadaten: Kundenname und E-Mail, Bestellnummer, Widerrufstyp, Status, Bestelldatum und Widerrufsdatum
+- Den vom Kunden im Widerrufsformular angegebenen Namen, mit Hinweis, wenn er vom Namen der Bestellung abweicht
 - Schnellaktions-Buttons zum direkten Bestätigen oder Ablehnen des Antrags auf der Seite
 - Eine vollständige Tabelle der widerrufenen Positionen mit Produktname, Artikelnummer und Menge – eindeutig als Voll- oder Teilwiderruf gekennzeichnet
 
@@ -121,7 +125,7 @@ Zugriff ist per ACL-Berechtigung geschuetzt (`Zwernemann_Withdrawal::withdrawals
 
 ### Mehrsprachigkeit
 
-Komplett uebersetzt in alle offiziellen 24 Sprachen der EU (je 97 Zeichenketten). Weitere Sprachen koennen ueber eigene CSV-Dateien ergaenzt werden.
+Komplett uebersetzt in alle offiziellen 24 Sprachen der EU (je 150 Zeichenketten). Weitere Sprachen koennen ueber eigene CSV-Dateien ergaenzt werden.
 
 ---
 
@@ -235,6 +239,15 @@ Die Datenbanktabellen `zwernemann_withdrawal` und `zwernemann_withdrawal_items` 
 ---
 
 ## Versionshistorie
+
+### 1.9.6
+- Das Widerrufsformular fragt jetzt Vor- und Nachnamen der widerrufenden Person ab, wie es Paragraf 356a BGB (Art. 11a der Richtlinie 2011/83/EU) verlangt. Beide Felder sind Pflicht und mit dem Namen aus der Bestellung vorbelegt
+- Der Name wird zum Widerruf gespeichert und nie zur Suche der Bestellung verwendet, damit abweichende Schreibweisen einen berechtigten Widerruf nicht blockieren
+- Neue Grid-Spalte *Name im Widerruf* und neue Zeile auf der Widerrufs-Detailseite, inklusive Hinweis, wenn der angegebene Name vom Namen der Bestellung abweicht
+- Die Benachrichtigungs-E-Mails an Kunde und Shop enthalten den angegebenen Namen (Template-Variable `withdrawal_name`)
+- Der REST-Endpunkt `withdrawal/confirmation` nimmt die optionalen Felder `firstname` und `lastname` entgegen und speichert sie am Datensatz
+- Neue Datenbankspalten `withdrawal_firstname` und `withdrawal_lastname` in `zwernemann_withdrawal`, fuer dieses Update ist daher `bin/magento setup:upgrade` erforderlich
+- Bei Validierungsfehlern im Widerrufsformular landen Gastkunden wieder im Gastformular statt auf der Login-Seite
 
 ### 1.9.5
 - Korrigierter Hinweis bei noch nicht versandten Bestellungen: Er erweckt nicht mehr den Eindruck, der Widerruf ende mit dem Erhalt der Ware, sondern nennt den Erhalt der Ware als Beginn der Widerrufsfrist
