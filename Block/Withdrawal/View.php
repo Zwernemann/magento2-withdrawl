@@ -187,6 +187,43 @@ class View extends Template
         return $this->config->getWithdrawalDeadline($order);
     }
 
+    /**
+     * First name suggested for the withdrawal form, taken from the order so the
+     * customer only has to correct it when the withdrawing person differs.
+     */
+    public function getSuggestedFirstname(): string
+    {
+        $order = $this->getOrder();
+        if (!$order) {
+            return '';
+        }
+
+        $firstname = trim((string) $order->getCustomerFirstname());
+        if ($firstname === '' && $order->getBillingAddress()) {
+            $firstname = trim((string) $order->getBillingAddress()->getFirstname());
+        }
+
+        return $firstname;
+    }
+
+    /**
+     * Last name suggested for the withdrawal form, see getSuggestedFirstname().
+     */
+    public function getSuggestedLastname(): string
+    {
+        $order = $this->getOrder();
+        if (!$order) {
+            return '';
+        }
+
+        $lastname = trim((string) $order->getCustomerLastname());
+        if ($lastname === '' && $order->getBillingAddress()) {
+            $lastname = trim((string) $order->getBillingAddress()->getLastname());
+        }
+
+        return $lastname;
+    }
+
     public function isGuest(): bool
     {
         return !$this->customerSession->isLoggedIn()
