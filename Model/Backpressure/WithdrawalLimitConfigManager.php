@@ -5,12 +5,12 @@ namespace Zwernemann\Withdrawal\Model\Backpressure;
 
 use Magento\Framework\App\Backpressure\ContextInterface;
 use Magento\Framework\App\Backpressure\SlidingWindow\LimitConfig;
-use Magento\Framework\App\Backpressure\SlidingWindow\LimitConfigManagerInterface;
+
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\RuntimeException;
 use Magento\Store\Model\ScopeInterface;
 
-class WithdrawalLimitConfigManager implements LimitConfigManagerInterface
+class WithdrawalLimitConfigManager
 {
     public const REQUEST_TYPE_ID = 'withdrawal-api';
 
