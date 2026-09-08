@@ -34,6 +34,11 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Allow customers to withdraw individual items instead of the entire order. Default: No.</comment>
                 </field>
+                <field id="withdrawal_notice" translate="label comment" type="textarea" sortOrder="45"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Withdrawal Notice Text</label>
+                    <comment>Optional. This text is shown to the customer on the withdrawal form. If empty, the default text is used.</comment>
+                </field>
                 <field id="allowed_order_statuses" translate="label comment" type="multiselect"
                        sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Allowed Order Statuses</label>
