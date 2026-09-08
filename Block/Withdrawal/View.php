@@ -74,6 +74,23 @@ class View extends Template
         return $this->config->isPartialWithdrawalAllowed();
     }
 
+    /**
+     * Notice shown below the withdrawal form. Shop owners can override the
+     * wording in Stores > Configuration > Sales > Withdrawal Settings; when
+     * the field is empty the translated default text is used.
+     */
+    public function getWithdrawalNotice(): string
+    {
+        $notice = $this->config->getWithdrawalNotice();
+
+        if ($notice !== '') {
+            return $notice;
+        }
+
+        // phpcs:ignore Generic.Files.LineLength
+        return (string) __('After submitting, you will receive an automatic confirmation of receipt of your withdrawal by email. We will review your withdrawal and inform you about the next steps.');
+    }
+
     public function isWithdrawalAllowed(): bool
     {
         $order = $this->getOrder();
