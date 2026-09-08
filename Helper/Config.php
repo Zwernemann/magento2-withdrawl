@@ -17,6 +17,7 @@ class Config extends AbstractHelper
     const XML_PATH_EMAIL_SENDER = 'zwernemann_withdrawal/email/sender';
     const XML_PATH_ALLOWED_ORDER_STATUSES = 'zwernemann_withdrawal/general/allowed_order_statuses';
     const XML_PATH_ALLOW_PARTIAL_WITHDRAWAL = 'zwernemann_withdrawal/general/allow_partial_withdrawal';
+    const XML_PATH_WITHDRAWAL_NOTICE = 'zwernemann_withdrawal/general/withdrawal_notice';
     const XML_PATH_API_ORDER_STATUS = 'zwernemann_withdrawal/api/order_status';
     const XML_PATH_API_ENABLED = 'zwernemann_withdrawal/api/enabled';
 
@@ -65,6 +66,20 @@ class Config extends AbstractHelper
             ScopeInterface::SCOPE_STORE,
             $storeId
         );
+    }
+
+    /**
+     * Store-specific notice shown on the withdrawal form. Empty when the shop
+     * owner has not overridden it; the default wording then comes from the
+     * translated phrase in the template.
+     */
+    public function getWithdrawalNotice($storeId = null): string
+    {
+        return trim((string) $this->scopeConfig->getValue(
+            self::XML_PATH_WITHDRAWAL_NOTICE,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        ));
     }
 
     public function getAllowedOrderStatuses($storeId = null): array
