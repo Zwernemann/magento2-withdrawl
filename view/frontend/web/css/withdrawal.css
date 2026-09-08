@@ -78,6 +78,12 @@
     margin-bottom: 15px;
 }
 
+.withdrawal-deadline .withdrawal-notice {
+    margin-top: 10px;
+    color: #666;
+    font-size: 13px;
+}
+
 .box.box-order-items {
     margin-bottom: 20px;
 }
