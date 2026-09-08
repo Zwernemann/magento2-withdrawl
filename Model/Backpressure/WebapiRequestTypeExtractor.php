@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 namespace Zwernemann\Withdrawal\Model\Backpressure;
 
-use Magento\Framework\Webapi\Backpressure\BackpressureRequestTypeExtractorInterface;
 use Zwernemann\Withdrawal\Api\WithdrawalConfirmationInterface;
 
-class WebapiRequestTypeExtractor implements BackpressureRequestTypeExtractorInterface
+class WebapiRequestTypeExtractor
 {
     private const WITHDRAWAL_METHODS = ['sendConfirmation', 'canWithdraw'];
 
