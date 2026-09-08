@@ -156,13 +156,13 @@ $partialAllowed = $block->isPartialWithdrawalAllowed();
                                             <?php else: ?>
                                                 <input type="checkbox"
                                                        name="selected_items[]"
-                                                       value="<?= $itemId ?>"
+                                                       value="<?= (int) $itemId ?>"
                                                        class="withdrawal-item-checkbox"
                                                        checked/>
                                             <?php endif; ?>
                                         </td>
                                         <?php elseif (!$isWithdrawn): ?>
-                                            <input type="hidden" name="selected_items[]" value="<?= $itemId ?>"/>
+                                            <input type="hidden" name="selected_items[]" value="<?= (int) $itemId ?>"/>
                                         <?php endif; ?>
                                         <td class="col name" data-th="<?= $block->escapeHtmlAttr(__('Product Name')) ?>">
                                             <?= $block->escapeHtml($item->getName()) ?>
@@ -171,18 +171,18 @@ $partialAllowed = $block->isPartialWithdrawalAllowed();
                                             <?= $block->escapeHtml($item->getSku()) ?>
                                         </td>
                                         <td class="col qty" data-th="<?= $block->escapeHtmlAttr(__('Qty Ordered')) ?>">
-                                            <?= $qtyOrdered ?>
+                                            <?= (int) $qtyOrdered ?>
                                         </td>
                                         <?php if ($partialAllowed): ?>
                                         <td class="col qty-withdraw" data-th="<?= $block->escapeHtmlAttr(__('Qty to Withdraw')) ?>">
                                             <?php if (!$isWithdrawn): ?>
                                                 <input type="number"
-                                                       name="item_qty[<?= $itemId ?>]"
-                                                       value="<?= $qtyOrdered ?>"
+                                                       name="item_qty[<?= (int) $itemId ?>]"
+                                                       value="<?= (int) $qtyOrdered ?>"
                                                        min="1"
-                                                       max="<?= $qtyOrdered ?>"
+                                                       max="<?= (int) $qtyOrdered ?>"
                                                        class="input-text withdrawal-qty-input"
-                                                       data-item-id="<?= $itemId ?>"/>
+                                                       data-item-id="<?= (int) $itemId ?>"/>
                                             <?php else: ?>
                                                 &mdash;
                                             <?php endif; ?>
