@@ -58,6 +58,23 @@ $items      = $block->getWithdrawalItems();
                         <td><?= $block->escapeHtml($withdrawal->getData('customer_name') ?? '—') ?></td>
                     </tr>
                     <tr>
+                        <th><?= $block->escapeHtml(__('Name on Withdrawal')) ?></th>
+                        <td>
+                            <?php $declaredName = $withdrawal->getWithdrawalName(); ?>
+                            <?php if ($declaredName === ''): ?>
+                                &mdash;
+                            <?php else: ?>
+                                <?= $block->escapeHtml($declaredName) ?>
+                                <?php if ($withdrawal->hasNameMismatch()): ?>
+                                    <br/>
+                                    <span style="color:#e07000; font-weight:bold;">
+                                        <?= $block->escapeHtml(__('The name provided does not match the name on the order.')) ?>
+                                    </span>
+                                <?php endif; ?>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <tr>
                         <th><?= $block->escapeHtml(__('Customer Email')) ?></th>
                         <td><?= $block->escapeHtml($withdrawal->getData('customer_email')) ?></td>
                     </tr>
