@@ -116,6 +116,23 @@ class Submit implements HttpPostActionInterface
                 return $redirect->setPath('sales/order/history');
             }
 
+            // The consumer has to be able to state their name on the withdrawal
+            // form (section 356a BGB, Art. 11a of Directive 2011/83/EU). The name
+            // is stored with the request but never used to look up the order, as
+            // spelling variants must not block a valid withdrawal.
+            $withdrawalFirstname = trim((string) $this->request->getParam('withdrawal_firstname', ''));
+            $withdrawalLastname = trim((string) $this->request->getParam('withdrawal_lastname', ''));
+
+            if ($withdrawalFirstname === '' || $withdrawalLastname === '') {
+                $this->messageManager->addErrorMessage(
+                    __('Please enter your first name and last name.')
+                );
+                return $this->backToForm($redirect, $orderId, $isGuest);
+            }
+
+            $withdrawalFirstname = mb_substr($withdrawalFirstname, 0, 255);
+            $withdrawalLastname = mb_substr($withdrawalLastname, 0, 255);
+
             // Build a map of visible order items keyed by item_id
             $orderItemsById = [];
             foreach ($order->getAllVisibleItems() as $item) {
@@ -139,14 +156,14 @@ class Submit implements HttpPostActionInterface
                 $this->messageManager->addErrorMessage(
                     __('Please select at least one item to withdraw.')
                 );
-                return $redirect->setPath('withdrawal/index/view', ['order_id' => $orderId]);
+                return $this->backToForm($redirect, $orderId, $isGuest);
             }
 
             // Validate that all selected items belong to this order
             foreach ($selectedItemIds as $selectedId) {
                 if (!isset($orderItemsById[$selectedId])) {
                     $this->messageManager->addErrorMessage(__('Invalid item selection.'));
-                    return $redirect->setPath('withdrawal/index/view', ['order_id' => $orderId]);
+                    return $this->backToForm($redirect, $orderId, $isGuest);
                 }
             }
 
@@ -155,7 +172,7 @@ class Submit implements HttpPostActionInterface
                 $this->messageManager->addErrorMessage(
                     __('Partial withdrawal is not enabled. Please withdraw the entire order.')
                 );
-                return $redirect->setPath('withdrawal/index/view', ['order_id' => $orderId]);
+                return $this->backToForm($redirect, $orderId, $isGuest);
             }
 
             // Check that none of the selected items have already been withdrawn
@@ -165,7 +182,7 @@ class Submit implements HttpPostActionInterface
                 $this->messageManager->addErrorMessage(
                     __('One or more of the selected items have already been withdrawn and cannot be withdrawn again.')
                 );
-                return $redirect->setPath('withdrawal/index/view', ['order_id' => $orderId]);
+                return $this->backToForm($redirect, $orderId, $isGuest);
             }
 
             // Determine if this is a partial withdrawal
@@ -207,6 +224,8 @@ class Submit implements HttpPostActionInterface
                 'order_increment_id' => $order->getIncrementId(),
                 'customer_email'    => $order->getCustomerEmail(),
                 'customer_name'     => $customerName,
+                'withdrawal_firstname' => $withdrawalFirstname,
+                'withdrawal_lastname'  => $withdrawalLastname,
                 'status'            => 'pending',
                 'is_partial'        => $isPartial ? 1 : 0,
                 'order_created_at'  => $order->getCreatedAt(),
@@ -253,6 +272,7 @@ class Submit implements HttpPostActionInterface
             $templateVars = [
                 'order_increment_id'    => $order->getIncrementId(),
                 'customer_name'         => $customerName,
+                'withdrawal_name'       => trim($withdrawalFirstname . ' ' . $withdrawalLastname),
                 'customer_email'        => $order->getCustomerEmail(),
                 'order_date'            => $order->getCreatedAt(),
                 'withdrawal_date'       => $withdrawalDate,
@@ -283,5 +303,18 @@ class Submit implements HttpPostActionInterface
             return $redirect->setPath('withdrawal/guest/search');
         }
         return $redirect->setPath('sales/order/history');
+    }
+
+    /**
+     * Sends the customer back to the withdrawal form they came from. Guests use
+     * their own route, which reads the email from the session instead of
+     * requiring a customer login.
+     *
+     * @param \Magento\Framework\Controller\Result\Redirect $redirect
+     */
+    private function backToForm($redirect, int $orderId, bool $isGuest)
+    {
+        $path = $isGuest ? 'withdrawal/guest/view' : 'withdrawal/index/view';
+        return $redirect->setPath($path, ['order_id' => $orderId]);
     }
 }
