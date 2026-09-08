@@ -8,12 +8,14 @@
         <referenceBlock name="sales.order.history.extra.column.header">
             <block class="Zwernemann\Withdrawal\Block\Order\WithdrawalButton"
                    name="zwernemann.withdrawal.column.header"
-                   template="Zwernemann_Withdrawal::order/history/column_header.phtml"/>
+                   template="Zwernemann_Withdrawal::order/history/column_header.phtml"
+                   ifconfig="zwernemann_withdrawal/general/enabled"/>
         </referenceBlock>
         <referenceBlock name="sales.order.history.extra.container">
             <block class="Zwernemann\Withdrawal\Block\Order\WithdrawalButton"
                    name="zwernemann.withdrawal.history.button"
-                   template="Zwernemann_Withdrawal::order/history/withdrawal_button.phtml"/>
+                   template="Zwernemann_Withdrawal::order/history/withdrawal_button.phtml"
+                   ifconfig="zwernemann_withdrawal/general/enabled"/>
         </referenceBlock>
     </body>
 </page>
