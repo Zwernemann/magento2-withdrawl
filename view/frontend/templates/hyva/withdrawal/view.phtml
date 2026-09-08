@@ -72,7 +72,7 @@ if ($order) {
 
                     <div x-data="{
                             showConfirm: false,
-                            selected: {<?php foreach ($selectableItemIds as $sid): ?>'<?= $sid ?>': true,<?php endforeach; ?>},
+                            selected: {<?php foreach ($selectableItemIds as $sid): ?>'<?= (int) $sid ?>': true,<?php endforeach; ?>},
                             get selectedCount() { return Object.values(this.selected).filter(Boolean).length; },
                             get totalSelectable() { return Object.keys(this.selected).length; },
                             get allSelected() { return this.totalSelectable > 0 && this.selectedCount === this.totalSelectable; },
@@ -179,27 +179,27 @@ if ($order) {
                                             <?php else: ?>
                                                 <input type="checkbox"
                                                        name="selected_items[]"
-                                                       value="<?= $itemId ?>"
+                                                       value="<?= (int) $itemId ?>"
                                                        class="align-middle"
-                                                       x-model="selected['<?= $itemId ?>']"/>
+                                                       x-model="selected['<?= (int) $itemId ?>']"/>
                                             <?php endif; ?>
                                         </td>
                                         <?php elseif (!$isWithdrawn): ?>
-                                            <input type="hidden" name="selected_items[]" value="<?= $itemId ?>"/>
+                                            <input type="hidden" name="selected_items[]" value="<?= (int) $itemId ?>"/>
                                         <?php endif; ?>
                                         <td class="p-2" data-th="<?= $block->escapeHtmlAttr(__('Product Name')) ?>"><?= $block->escapeHtml($item->getName()) ?></td>
                                         <td class="p-2" data-th="<?= $block->escapeHtmlAttr(__('SKU')) ?>"><?= $block->escapeHtml($item->getSku()) ?></td>
-                                        <td class="p-2" data-th="<?= $block->escapeHtmlAttr(__('Qty Ordered')) ?>"><?= $qtyOrdered ?></td>
+                                        <td class="p-2" data-th="<?= $block->escapeHtmlAttr(__('Qty Ordered')) ?>"><?= (int) $qtyOrdered ?></td>
                                         <?php if ($partialAllowed): ?>
                                         <td class="p-2" data-th="<?= $block->escapeHtmlAttr(__('Qty to Withdraw')) ?>">
                                             <?php if (!$isWithdrawn): ?>
                                                 <input type="number"
-                                                       name="item_qty[<?= $itemId ?>]"
-                                                       value="<?= $qtyOrdered ?>"
+                                                       name="item_qty[<?= (int) $itemId ?>]"
+                                                       value="<?= (int) $qtyOrdered ?>"
                                                        min="1"
-                                                       max="<?= $qtyOrdered ?>"
+                                                       max="<?= (int) $qtyOrdered ?>"
                                                        class="w-20 border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:text-gray-400"
-                                                       :disabled="!selected['<?= $itemId ?>']"/>
+                                                       :disabled="!selected['<?= (int) $itemId ?>']"/>
                                             <?php else: ?>
                                                 &mdash;
                                             <?php endif; ?>
