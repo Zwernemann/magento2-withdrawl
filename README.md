@@ -33,6 +33,7 @@ Before the actual withdrawal, the customer sees a summary of their order:
 - Order number, date, status, total amount
 - All ordered items with name, SKU, quantity, and price
 - The deadline until which withdrawal is possible, calculated from the date of the last shipment
+- A notice about what happens after submission (editable in the backend, see *Withdrawal Notice Text*)
 - A button for final submission – with a preceding security confirmation
 
 **Partial withdrawal (optional)**
@@ -94,6 +95,7 @@ In the admin under *Stores > Configuration > Sales > Withdrawal Settings*:
 - Set recipient address for notifications
 - Set withdrawal period in days, counted from the last shipment date (Default: 14)
 - Enable/Disable partial withdrawal (Default: No)
+- Adapt the notice text on the withdrawal form (*Withdrawal Notice Text*, empty = translated default text)
 - Select email sender and templates
 
 ---
@@ -183,10 +185,11 @@ php bin/magento cache:flush
 4. Enter **Notification Email** – withdrawal notifications will be sent here
 5. Adjust **Withdrawal Period** if the legal period differs
 6. Set **Allow Partial Withdrawal** to *Yes* if customers should be able to withdraw individual items
-7. Configure email sender and templates if necessary
-8. Set **Enable REST API** to *Yes* if you use the public API endpoints
-9. Configure further **REST API** settings if needed (order status, rate limiting)
-10. Save and flush cache
+7. Adapt the **Withdrawal Notice Text** if the default wording does not fit your shop (leave empty for the default text)
+8. Configure email sender and templates if necessary
+9. Set **Enable REST API** to *Yes* if you use the public API endpoints
+10. Configure further **REST API** settings if needed (order status, rate limiting)
+11. Save and flush cache
 
 ### Linking the Guest Order Form
 
@@ -313,6 +316,12 @@ The database tables `zwernemann_withdrawal` and `zwernemann_withdrawal_items` re
 ---
 
 ## Version History
+
+### 1.9.5
+- Corrected the notice for orders that have not been shipped yet: it no longer suggests that withdrawal ends when the goods arrive, but states that the withdrawal period starts on receipt of the goods
+- New notice on the withdrawal form explaining that the customer receives an automatic confirmation of receipt and that the shop reviews the withdrawal before informing about the next steps
+- New backend setting *Withdrawal Notice Text* (Stores > Configuration > Sales > Withdrawal Settings > General Settings) to overwrite this notice per store view; when empty, the translated default text is used
+- Translations for the new and changed texts in all 24 EU languages
 
 ### 1.9.4
 - Minor fixes and improvements
