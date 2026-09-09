@@ -13,7 +13,7 @@ interface WithdrawalRepositoryInterface
     public function create($orderId, $comment = null);
 
     /**
-     * @return array
+     * @return mixed[]
      */
     public function getList();
 
