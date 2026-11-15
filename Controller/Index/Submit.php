@@ -285,9 +285,11 @@ class Submit implements HttpPostActionInterface
             $this->emailSender->sendCustomerEmail(
                 $templateVars,
                 $order->getCustomerEmail(),
-                $customerName
+                $customerName,
+                false,
+                (int) $order->getStoreId()
             );
-            $this->emailSender->sendAdminEmail($templateVars);
+            $this->emailSender->sendAdminEmail($templateVars, false, (int) $order->getStoreId());
 
             // Store the order id in the session instead of exposing it in the URL.
             // This binds the success page to the visitor's session and prevents

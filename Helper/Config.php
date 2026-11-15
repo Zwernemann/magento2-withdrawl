@@ -158,14 +158,15 @@ class Config extends AbstractHelper
     
     public function isWithdrawalAllowed(\Magento\Sales\Api\Data\OrderInterface $order): bool
     {
-        if (!$this->isEnabled()) {
+        $storeId = (int) $order->getStoreId();
+        if (!$this->isEnabled($storeId)) {
             return false;
         }
 
         // The order status must be in the allowed list (when configured).
         // This has to be checked regardless of shipment state, otherwise
         // unshipped orders (e.g. "Nová objednávka") would bypass the filter.
-        $allowedStatuses = $this->getAllowedOrderStatuses();
+        $allowedStatuses = $this->getAllowedOrderStatuses($storeId);
         if (!empty($allowedStatuses) && !in_array($order->getStatus(), $allowedStatuses, true)) {
             return false;
         }
@@ -184,7 +185,7 @@ class Config extends AbstractHelper
         $referenceDate = $shipmentDate ?? new \DateTime($order->getCreatedAt());
 
         $now = new \DateTime();
-        return (int) $now->diff($referenceDate)->days <= $this->getWithdrawalPeriodDays();
+        return (int) $now->diff($referenceDate)->days <= $this->getWithdrawalPeriodDays($storeId);
     }
 
     public function getWithdrawalDeadline(\Magento\Sales\Api\Data\OrderInterface $order): string
@@ -195,7 +196,7 @@ class Config extends AbstractHelper
             return '';
         }
 
-        $shipmentDate->modify('+' . $this->getWithdrawalPeriodDays() . ' days');
+        $shipmentDate->modify('+' . $this->getWithdrawalPeriodDays((int) $order->getStoreId()) . ' days');
         return $shipmentDate->format('d.m.Y');
     }
 }
