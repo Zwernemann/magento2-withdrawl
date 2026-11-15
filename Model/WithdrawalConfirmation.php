@@ -102,9 +102,10 @@ class WithdrawalConfirmation implements WithdrawalConfirmationInterface
                 $templateVars,
                 (string) $order->getCustomerEmail(),
                 $customerName,
-                true
+                true,
+                $storeId
             );
-            $this->emailSender->sendAdminEmail($templateVars, true);
+            $this->emailSender->sendAdminEmail($templateVars, true, $storeId);
         } catch (\Exception $e) {
             $this->logger->error(
                 'Withdrawal confirmation email failed: ' . $e->getMessage(),

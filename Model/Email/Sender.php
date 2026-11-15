@@ -32,10 +32,11 @@ class Sender
         array $templateVars,
         string $customerEmail,
         string $customerName,
-        bool $rethrowExceptions = false
+        bool $rethrowExceptions = false,
+        ?int $storeId = null
     ): void {
         try {
-            $storeId = $this->storeManager->getStore()->getId();
+            $storeId = $storeId ?? $this->storeManager->getStore()->getId();
             $sender = $this->config->getEmailSender((int) $storeId);
             $templateId = $this->config->getCustomerEmailTemplate((int) $storeId);
 
@@ -58,10 +59,13 @@ class Sender
         }
     }
 
-    public function sendAdminEmail(array $templateVars, bool $rethrowExceptions = false): void
-    {
+    public function sendAdminEmail(
+        array $templateVars,
+        bool $rethrowExceptions = false,
+        ?int $storeId = null
+    ): void {
         try {
-            $storeId = $this->storeManager->getStore()->getId();
+            $storeId = $storeId ?? $this->storeManager->getStore()->getId();
             $sender = $this->config->getEmailSender((int) $storeId);
             $templateId = $this->config->getAdminEmailTemplate((int) $storeId);
             $adminEmail = $this->getAdminEmail((int) $storeId);
